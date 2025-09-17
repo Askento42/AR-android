@@ -4,48 +4,29 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Seven — 3D-меню с AR</title>
-
-  <!-- model-viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@latest/dist/model-viewer.min.js"></script>
   <script nomodule src="https://unpkg.com/@google/model-viewer@latest/dist/model-viewer-legacy.js"></script>
-
-  <!-- SEO/OG (минимум) -->
-  <meta name="description" content="Seven — 3D-меню с AR. Увидь блюдо в реальном размере перед заказом." />
-  <meta property="og:title" content="Seven — 3D-меню с AR" />
-  <meta property="og:description" content="Рассмотри блюдо в 3D и AR перед заказом." />
+  <meta name="description" content="Рассмотри блюдо в 3D и AR перед заказом." />
   <meta property="og:image" content="assets/posters/soup_poster.jpg" />
-  <meta property="og:type" content="website" />
-
   <style>
-    :root{
-      --brand:#511c28; --bg:#f6f3ef; --card:#fff; --text:#1b1d21; --muted:#6b7280; --accent:#6d28d9;
-      --border:#e6e3dd;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+    :root{--brand:#511c28;--bg:#f6f3ef;--card:#fff;--text:#1b1d21;--muted:#6b7280;--border:#e6e3dd}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
     header{position:sticky;top:0;z-index:30;background:#fff8;backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--border)}
-    .header-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+    .header-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
     .logo{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:var(--brand);color:#fff;font-weight:800}
-    .brand{font-weight:700}
-    .cta{display:flex;gap:10px}
-    .btn{appearance:none;border:1px solid var(--brand);background:var(--brand);color:#fff;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
-    .btn.outline{background:#fff;color:var(--brand)}
     .cats{position:sticky;top:58px;z-index:20;background:#fff;border-bottom:1px solid var(--border)}
     .cats-in{max-width:1200px;margin:0 auto;padding:8px 12px;display:flex;gap:8px;overflow-x:auto}
-   .chip{white-space:nowrap;border:1px solid var(--border);background:#fff;border-radius:999px;padding:7px 12px;font-size:14px;cursor:pointer}
+    .chip{white-space:nowrap;border:1px solid var(--border);background:#fff;border-radius:999px;padding:7px 12px;font-size:14px;cursor:pointer}
     .chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
-
     .wrap{max-width:1200px;margin:0 auto;padding:14px}
-    .grid{display:grid;grid-template-columns:1fr 2fr;gap:14px}
-    @media (max-width: 992px){ .grid{grid-template-columns:1fr} }
-
+    .grid{display:grid;grid-template-columns:1fr 2fr;gap:14px} @media (max-width:992px){.grid{grid-template-columns:1fr}}
     .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px}
     .list{max-height:calc(100vh - 180px);overflow:auto}
     .tile{width:100%;text-align:left;display:flex;gap:10px;align-items:center;border:1px solid var(--border);padding:10px;border-radius:12px;background:#fff;cursor:pointer}
     .tile.active{border-color:var(--brand);background:#f8f5f3}
     .thumb{width:56px;height:56px;border-radius:10px;object-fit:cover;background:#eee}
     .muted{color:var(--muted);font-size:12px}
-    model-viewer{width:100%;height:520px;border-radius:14px;background:#fafafa;border:1px solid var(--border)}
+    model-viewer{width:100%;height:520px;border-radius:14px;background:#0e0f11;border:1px solid var(--border)}
     .title{font-weight:700;font-size:20px;margin:10px 0 4px}
     .meta{color:var(--brand);font-weight:700}
     .hint{margin-top:10px;color:var(--muted);font-size:12px}
@@ -54,184 +35,106 @@
   </style>
 </head>
 <body>
-
 <header>
   <div class="header-in">
     <div style="display:flex;align-items:center;gap:10px">
-      <div class="logo">7</div>
-      <div class="brand">Seven — 3D-меню с AR</div>
+      <div class="logo">7</div><div>Seven — 3D-меню с AR</div>
     </div>
-    <div class="cta">
-      <a class="btn outline" href="https://maps.app.goo.gl/" target="_blank" rel="noopener">Как добраться</a>
-      <a class="btn" href="tel:+996000000000">Забронировать</a>
-    </div>
+    <div><a class="chip" href="tel:+996000000000">Забронировать</a></div>
   </div>
 </header>
 
-<!-- Категории -->
-<div class="cats">
-  <div class="cats-in" id="cat-bar"></div>
-</div>
+<div class="cats"><div class="cats-in" id="cat-bar"></div></div>
 
 <main class="wrap">
   <div class="grid">
-    <!-- Список блюд -->
-    <aside class="card">
-      <div class="list" id="dish-list"></div>
-    </aside>
-
-    <!-- Просмотр 3D/детали -->
+    <aside class="card"><div class="list" id="dish-list"></div></aside>
     <section class="card">
-      <div id="viewer-wrap">
-        <!-- model-viewer вставится скриптом -->
-      </div>
+      <div id="viewer-wrap"></div>
       <div class="alert" id="mv-error">Не удалось загрузить 3D-модель. Показан постер. Проверьте файлы в <code>assets/models</code>.</div>
-
       <div class="title" id="dish-title">—</div>
       <div class="meta" id="dish-meta"></div>
-      <p class="hint">Поддерживается AR: Android — Scene Viewer, iOS — Quick Look (если указан USDZ).</p>
+      <p class="hint">Android — Scene Viewer, iOS — Quick Look (при наличии USDZ).</p>
     </section>
   </div>
 </main>
 
-<footer>
-  © Seven. 3D-модели и фотографии используются для визуализации блюд. AR-режим доступен на совместимых устройствах.
-</footer>
+<footer>© Seven. Визуализация блюд в 3D/AR.</footer>
 
 <script>
-/* ------------ ДАННЫЕ ------------- */
-const categories = ["Салаты","Закуски","Супы","Паста","Основные блюда","Пицца","Десерты","Гарниры"];
+/* === ДАННЫЕ (имена под твои файлы) === */
+const categories=["Салаты","Закуски","Супы","Паста","Основные блюда","Пицца","Десерты","Гарниры"];
+const POSTER_JPG="assets/posters/soup_poster.jpg";
+const POSTER_PNG="assets/posters/soup_poster.png";
 
-const dishes = [
-  // СУПЫ (Таджин с 3D, остальные — фото)
-  { id:"soup-tadjin", name:"Суп Таджин", category:"Супы",
-    weight:"—", price:"—",
-    poster:"assets/posters/soup_poster.jpg",
-    glb:"assets/models/scene.glb",
-    usdz:"assets/models/soup_tureen1.usdz",
-    dims:{w:22,l:22,h:9,unit:"cm"}
-  },
-  { id:"soup-pumpkin", name:"Тыквенный суп", category:"Супы", weight:"350 г", price:"420 с", poster:"assets/posters/soup_poster.jpg" },
-  { id:"soup-okroshka", name:"Окрошка с курицей", category:"Супы", weight:"450 г", price:"390 с", poster:"assets/posters/soup_poster.jpg" },
-  { id:"soup-borscht", name:"Борщ", category:"Супы", weight:"450/40 г", price:"540 с", poster:"assets/posters/soup_poster.jpg" },
-  { id:"soup-tom-yam", name:"Том-ям", category:"Супы", weight:"350/90 г", price:"820 с", poster:"assets/posters/soup_poster.jpg" },
-
-  // Примеры других категорий (без 3D, только постеры; подставишь позже свои)
-  { id:"salad-greco", name:"Греко", category:"Салаты", weight:"300 г", price:"690 с", poster:"assets/posters/soup_poster.jpg" },
-  { id:"roll-phila", name:"Филадельфия", category:"Закуски", weight:"230 г", price:"790 с", poster:"assets/posters/soup_poster.jpg" },
-  { id:"main-steak", name:"Стейк рибай", category:"Основные блюда", weight:"300 г", price:"1490 с", poster:"assets/posters/soup_poster.jpg" },
-  { id:"pizza-marg", name:"Маргарита", category:"Пицца", poster:"assets/posters/soup_poster.jpg" },
-  { id:"dessert-cheese", name:"Чизкейк", category:"Десерты", poster:"assets/posters/soup_poster.jpg" },
-  { id:"side-bread", name:"Хлеб", category:"Гарниры", poster:"assets/posters/soup_poster.jpg" },
+const dishes=[
+  {id:"soup-tadjin",name:"Суп Таджин",category:"Супы",weight:"—",price:"—",
+   poster:POSTER_JPG, glb:"assets/models/soup.glb", usdz:"assets/models/soup1.usdz",
+   dims:{w:22,l:22,h:9,unit:"cm"}},
+  {id:"soup-pumpkin",name:"Тыквенный суп",category:"Супы",weight:"350 г",price:"420 с",poster:POSTER_JPG},
+  {id:"soup-okroshka",name:"Окрошка с курицей",category:"Супы",weight:"450 г",price:"390 с",poster:POSTER_JPG},
+  {id:"soup-borscht",name:"Борщ",category:"Супы",weight:"450/40 г",price:"540 с",poster:POSTER_JPG},
+  {id:"soup-tom-yam",name:"Том-ям",category:"Супы",weight:"350/90 г",price:"820 с",poster:POSTER_JPG},
 ];
 
-/* --------- УТИЛЫ --------- */
-const $ = (s, r=document) => r.querySelector(s);
-const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-const isHttp = (u)=>{ try{const x=new URL(u, location.href); return ["http:","https:"].includes(x.protocol);}catch{return false} };
-const cacheBust = (p)=> p ? (p.includes("?")? `${p}&v=${Date.now()}`:`${p}?v=${Date.now()}`) : p;
+/* === Утилиты === */
+const $=(s,r=document)=>r.querySelector(s);
+const cacheBust=(p)=>p?(p.includes("?")?`${p}&v=${Date.now()}`:`${p}?v=${Date.now()}`):p;
+async function urlOk(u){ try{ const r=await fetch(u,{method:"HEAD",cache:"no-store"}); return r.ok; }catch{return false} }
 
-/* --------- РЕНДЕР КАТЕГОРИЙ --------- */
-const catBar = $("#cat-bar");
-let activeCat = "Супы";
-let activeId  = dishes.find(d => d.category===activeCat)?.id;
-
-function renderCats(){
-  catBar.innerHTML = categories.map(c =>
-    `<button class="chip ${c===activeCat?'active':''}" data-cat="${c}">${c}</button>`
-  ).join("");
-}
+/* === Категории === */
+const catBar=$("#cat-bar"); let activeCat="Супы";
+function renderCats(){ catBar.innerHTML=categories.map(c=>`<button class="chip ${c===activeCat?'active':''}" data-cat="${c}">${c}</button>`).join("") }
 renderCats();
+catBar.addEventListener("click",e=>{const b=e.target.closest("button[data-cat]");if(!b)return;activeCat=b.dataset.cat;renderCats();const f=dishes.find(d=>d.category===activeCat); if(f){activeId=f.id; renderList(); renderViewer();}});
 
-catBar.addEventListener("click",(e)=>{
-  const b = e.target.closest("button[data-cat]");
-  if(!b) return;
-  activeCat = b.dataset.cat;
-  renderCats();
-  const first = dishes.find(d => d.category===activeCat);
-  if(first){ activeId = first.id; renderList(); renderViewer(); }
-});
-
-/* --------- РЕНДЕР СПИСКА --------- */
-const list = $("#dish-list");
-
+/* === Список === */
+const list=$("#dish-list"); let activeId=dishes.find(d=>d.category===activeCat)?.id;
 function renderList(){
-  const rows = dishes.filter(d=>d.category===activeCat).map(d=>`
+  list.innerHTML=dishes.filter(d=>d.category===activeCat).map(d=>`
     <button class="tile ${d.id===activeId?'active':''}" data-id="${d.id}">
-      <img class="thumb" src="${d.poster||'assets/posters/soup_poster.jpg'}" alt="${d.name}">
-      <div>
-        <div style="font-weight:600">${d.name}</div>
-        <div class="muted">${[d.weight,d.price].filter(Boolean).join(" • ")||"&nbsp;"}</div>
-      </div>
-    </button>
-  `).join("");
-  list.innerHTML = rows;
+      <img class="thumb" src="${d.poster}" alt="${d.name}" onerror="this.src='${POSTER_PNG}'">
+      <div><div style="font-weight:600">${d.name}</div><div class="muted">${[d.weight,d.price].filter(Boolean).join(" • ")||"&nbsp;"}</div></div>
+    </button>`).join("");
 }
 renderList();
+list.addEventListener("click",e=>{const b=e.target.closest("button[data-id]");if(!b)return;activeId=b.dataset.id;renderList();renderViewer();});
 
-list.addEventListener("click",(e)=>{
-  const b = e.target.closest("button[data-id]");
-  if(!b) return;
-  activeId = b.dataset.id;
-  renderList();
-  renderViewer();
-});
-
-/* --------- VIEWER + ДЕТАЛИ --------- */
-const viewerWrap = $("#viewer-wrap");
-const titleEl = $("#dish-title");
-const metaEl = $("#dish-meta");
-const errEl = $("#mv-error");
-
-function renderViewer(){
-  const d = dishes.find(x=>x.id===activeId);
-  if(!d) return;
-
-  // заголовки
-  titleEl.textContent = d.name;
-  metaEl.textContent = [d.weight,d.price].filter(Boolean).join(" • ");
-
-  // вьюер / постер
-  const hasGlb = !!d.glb;
-  if(hasGlb){
-    const glb  = cacheBust(d.glb);
-    const usdz = d.usdz ? cacheBust(d.usdz) : "";
-
-    viewerWrap.innerHTML = `
-      <model-viewer id="mv"
-        src="${glb}"
-        ${usdz ? `ios-src="${usdz}"`: ""}
-        ar ar-modes="webxr scene-viewer quick-look"
-        camera-controls auto-rotate
-        exposure="1" shadow-intensity="0.9"
-        poster="${d.poster||'assets/posters/soup_poster.jpg'}"
-        style="width:100%;height:520px;border-radius:14px;background:#fafafa;border:1px solid var(--border)"></model-viewer>
-      <div class="hint">
-        ${d.dims ? `Реальный размер (ориентир): ${d.dims.w||'?'}×${d.dims.l||'?'}×${d.dims.h||'?'} ${d.dims.unit||'cm'}. `:``}
-        Нажми «AR», чтобы увидеть блюдо у себя на столе.
-      </div>
-    `;
-
-    const mv = $("#mv");
-    errEl.style.display = "none";
-    mv.addEventListener("error", ()=>{ errEl.style.display="block"; });
-    // кнопка AR в UI самого model-viewer; можно программно:
-    // mv.activateAR();
-  } else {
-    viewerWrap.innerHTML = `
-      <img src="${d.poster||'assets/posters/soup_poster.jpg'}" alt="${d.name}"
-           style="width:100%;height:520px;object-fit:cover;border-radius:14px;border:1px solid var(--border)">
-      <div class="hint">3D-модель для этого блюда будет добавлена позднее.</div>
-    `;
-    errEl.style.display = "none";
-  }
-}
+/* === Viewer === */
+const viewerWrap=$("#viewer-wrap"), titleEl=$("#dish-title"), metaEl=$("#dish-meta"), errEl=$("#mv-error");
 renderViewer();
 
-/* -------- ТЕСТЫ (минимум) ---------- */
-console.assert(!!dishes.find(d=>d.id==="soup-tadjin"), "Должен быть Таджин");
-console.assert(isHttp(location.href), "Страница должна открываться по http/https (GitHub Pages ок)");
-</script>
+async function renderViewer(){
+  const d=dishes.find(x=>x.id===activeId); if(!d) return;
+  titleEl.textContent=d.name; metaEl.textContent=[d.weight,d.price].filter(Boolean).join(" • ");
+  let poster=d.poster||POSTER_JPG; if(!(await urlOk(poster))) poster=POSTER_PNG;
 
+  if(d.glb){
+    const glb=cacheBust(d.glb); const usdz=d.usdz?cacheBust(d.usdz):"";
+    if(!(await urlOk(glb))) { showPoster(poster); errEl.style.display="block"; return; }
+
+    viewerWrap.innerHTML=`
+      <model-viewer id="mv"
+        src="${glb}" ${usdz?`ios-src="${usdz}"`:""}
+        ar ar-modes="scene-viewer quick-look webxr"
+        camera-controls shadow-intensity="1" exposure="1"
+        environment-image="neutral" tone-mapping="aces"
+        poster="${poster}" alt="${d.name}" crossorigin="anonymous"></model-viewer>
+    `;
+    errEl.style.display="none";
+    $("#mv").addEventListener("error",()=>{ errEl.style.display="block"; showPoster(poster); });
+  } else {
+    showPoster(poster); errEl.style.display="none";
+  }
+
+  function showPoster(src){
+    viewerWrap.innerHTML=`<img src="${src}" alt="${d.name}"
+      style="width:100%;height:520px;object-fit:cover;border-radius:14px;border:1px solid var(--border)">`;
+  }
+}
+
+/* === Тест === */
+console.assert(!!dishes.find(d=>d.id==="soup-tadjin"), "Таджин должен быть в данных");
+</script>
 </body>
 </html>
