@@ -70,7 +70,6 @@
 
     const STATE = { data:null, cat:'Все', active:null };
 
-    // normalize helper: supports both latin and Cyrillic keys
     function norm(x){
       const nx = {
         id: x.id || (x.title||x['название']||'').toLowerCase().replace(/\s+/g,'-'),
@@ -84,7 +83,6 @@
         badges: x.badges || x['значки'] || [],
         model: x.model || x['модель'] || null
       };
-      // Inject 3D/AR for Суп Таджин if missing
       const t = nx.title.trim().toLowerCase();
       if (!nx.model && (t.includes('таджин') || t.includes('tajin'))) {
         nx.model = { ...TAJIN_MODEL };
@@ -94,7 +92,6 @@
 
     function money(n, c){
       if(n==null) return '—';
-      // map common currency Russian names to codes
       const map = { "сом":"KGS", "kgs":"KGS", "сомы":"KGS" };
       const code = (map[(c||'').toString().toLowerCase()] || c || "KGS");
       return new Intl.NumberFormat('ru-RU').format(n)+' '+code;
@@ -104,13 +101,13 @@
       const r = await fetch('./data/menu.json?_=' + Date.now());
       const raw = await r.json();
       const cats = (raw.categories || raw['категории'] || []).slice();
-      const items = (raw.items || raw['позиции'] || raw['itemsList'] || []).map(norm);
-      // ensure current category list covers all item categories
+      const itemsRaw = raw.items || raw['позиции'] || raw['предметы'] || raw['itemsList'] || [];
+      const items = itemsRaw.map(norm);
       items.forEach(it => { if(it.category && !cats.includes(it.category)) cats.push(it.category); });
       STATE.data = { cats, items };
       renderFilters();
       renderList();
-      console.log('AR-menu loaded:', {catsCount: cats.length, items: items.length, injectedTajin: items.some(i => i.title.toLowerCase().includes('таджин') && i.model)});
+      console.log('AR-menu loaded:', {catsCount: cats.length, items: items.length});
     }
 
     function renderFilters(){
