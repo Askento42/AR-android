@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AR Menu — Demo</title>
+  <!-- model-viewer: актуальная версия -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer@latest/dist/model-viewer.min.js"></script>
+  <script nomodule src="https://unpkg.com/@google/model-viewer@latest/dist/model-viewer-legacy.js"></script>
+  <style>
+    :root { --bg:#0b0b0c; --card:#141416; --text:#eaeaea; --muted:#9aa0a6; --accent:#ffd54a; }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    header{padding:18px 20px;border-bottom:1px solid #1f2023;display:flex;align-items:center;gap:12px}
+    header .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#ff8a00,#ffd54a);} 
+    header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.2px}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+    .card{background:var(--card);border:1px solid #1f2023;border-radius:18px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+    .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .title{font-weight:700;font-size:16px}
+    .price{color:var(--accent);font-weight:800}
+    model-viewer{width:100%;height:420px;border-radius:14px;background:#0e0f11;border:1px solid #212226}
+    .row{display:flex;gap:10px;margin-top:10px}
+    .btn{flex:1;appearance:none;border:0;border-radius:12px;padding:12px 14px;font-weight:700;color:#111;background:var(--accent);cursor:pointer}
+    .btn.secondary{background:#222;color:#eaeaea;border:1px solid #2b2c30}
+    .hint{margin-top:10px;color:var(--muted);font-size:12px}
+    footer{padding:30px 20px;color:#8f96a3;text-align:center}
+    a{color:#cde1ff}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="true"></div>
+    <h1>AR Menu — демо для ресторана</h1>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <!-- КАРТОЧКА БЛЮДА №1 -->
+      <article class="card" id="dish-1">
+        <div class="top">
+          <div class="title">Чорба с говядиной</div>
+          <div class="price">€9.90</div>
+        </div>
+
+        <!-- Положи модель сюда: assets/models/soup_v2.glb  -->
+        <model-viewer id="mv-soup"
+          src="assets/models/soup_v2.glb?v=DEV"
+          ar ar-modes="scene-viewer quick-look webxr"
+          camera-controls
+          shadow-intensity="1"
+          exposure="1"
+          environment-image="neutral"
+          poster="assets/posters/soup_poster.jpg"
+          tone-mapping="aces"
+          alt="Чорба в глиняной тарелке">
+        </model-viewer>
+
+        <div class="row">
+          <button class="btn" id="btn-ar-1">Посмотреть в AR</button>
+          <button class="btn secondary" id="btn-reset-1">Сбросить камеру</button>
+        </div>
+        <div class="hint">Совет: поверни модель двумя пальцами, чтобы рассмотреть текстуру. Для iPhone можно добавить файл .usdz (атрибут <code>ios-src</code>).</div>
+      </article>
+
+      <!-- ШАБЛОН ДЛЯ ВТОРОГО БЛЮДА (скопируй и поменяй src/название/цену) -->
+      <!--
+      <article class="card">
+        <div class="top"><div class="title">Паста Болоньезе</div><div class="price">€11.50</div></div>
+        <model-viewer src="assets/models/pasta.glb?v=DEV" ar camera-controls shadow-intensity="1" exposure="1" environment-image="neutral" alt="Паста Болоньезе"></model-viewer>
+        <div class="row"><button class="btn">Посмотреть в AR</button><button class="btn secondary">Сбросить камеру</button></div>
+      </article>
+      -->
+    </div>
+  </div>
+
+  <footer>
+    AR Menu прототип • <a href="https://modelviewer.dev/" target="_blank" rel="noopener">model-viewer</a>
+  </footer>
+
+  <script>
+    // Обход кэша в режиме разработки: DEV → текущий timestamp
+    document.querySelectorAll('model-viewer').forEach(mv => {
+      if (mv.getAttribute('src') && mv.getAttribute('src').includes('DEV')) {
+        const url = mv.getAttribute('src').replace('DEV', Date.now());
+        mv.setAttribute('src', url);
+      }
+    });
+
+    // Кнопки управления 1-й карточки
+    const mv1 = document.getElementById('mv-soup');
+    document.getElementById('btn-ar-1').addEventListener('click', () => mv1.activateAR());
+    document.getElementById('btn-reset-1').addEventListener('click', () => {
+      mv1.resetTurntableRotation();
+      mv1.cameraOrbit = '0deg 75deg 100%';
+      mv1.fieldOfView = '45deg';
+    });
+  </script>
+</body>
+</html>
