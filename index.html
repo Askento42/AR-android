@@ -31,9 +31,11 @@
     .controls{display:flex;gap:8px;margin-top:12px}
     .btn{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer}
     .btn.primary{background:#1b1b1b;color:#fff;border-color:#1b1b1b}
+    .debug{position:fixed;top:10px;left:10px;background:#000;color:#fff;padding:4px 10px;border-radius:6px;font-size:14px;font-weight:700}
   </style>
 </head>
 <body>
+  <div class="debug">СБОРКА V7</div>
   <div class="container">
     <header>
       <div class="logo"><div class="logo-badge">7</div><div>Seven — 3D‑меню с AR</div></div>
@@ -63,13 +65,19 @@
   </div>
 
   <script>
-    // модель для Суп Таджин
     const TAJIN_MODEL = {
       glb: "https://askento42.github.io/AR-android/assets/models/soup.glb",
       usdz: "https://askento42.github.io/AR-android/assets/models/soup1.usdz"
     };
-
     const STATE = { data:null, cat:'Все', active:null };
+    let POSTER_MAP = {};
+
+    async function loadPosterMap(){
+      try{
+        const r = await fetch('./data/posters.json?_=' + Date.now());
+        if(r.ok) POSTER_MAP = await r.json();
+      }catch(e){}
+    }
 
     function norm(x){
       const nx = {
@@ -80,7 +88,7 @@
         category: x.category || x['категория'] || 'Прочее',
         grams: x.grams || x['граммовка'] || x['вес'] || null,
         desc: x.desc || x['описание'] || x['desc'] || '',
-        poster: x.poster || x['плакат'] || null,
+        poster: x.poster || x['плакат'] || (POSTER_MAP[x.title] || null),
         badges: x.badges || x['значки'] || [],
         model: x.model || x['модель'] || null
       };
@@ -99,11 +107,11 @@
     }
 
     async function load(){
+      await loadPosterMap();
       const url = './data/menu.json?v=prod&_=' + Date.now();
       const r = await fetch(url);
       const raw = await r.json();
 
-      // найдём массив блюд в разных ключах, при необходимости — из любых массивов в JSON
       let itemsRaw = raw.items || raw['позиции'] || raw['предметы'] || raw['itemsList'] || [];
       if (!Array.isArray(itemsRaw) || itemsRaw.length === 0){
         const pools=[]; (function collect(o){ if(!o) return;
