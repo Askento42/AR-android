@@ -4,12 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AR Menu — Demo</title>
-  <!-- model-viewer: актуальная версия -->
+  <!-- model-viewer: всегда свежая версия -->
   <script type="module" src="https://unpkg.com/@google/model-viewer@latest/dist/model-viewer.min.js"></script>
   <script nomodule src="https://unpkg.com/@google/model-viewer@latest/dist/model-viewer-legacy.js"></script>
   <style>
     :root { --bg:#0b0b0c; --card:#141416; --text:#eaeaea; --muted:#9aa0a6; --accent:#ffd54a; }
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
     header{padding:18px 20px;border-bottom:1px solid #1f2023;display:flex;align-items:center;gap:12px}
     header .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#ff8a00,#ffd54a);} 
     header h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.2px}
@@ -26,6 +27,7 @@
     .hint{margin-top:10px;color:var(--muted);font-size:12px}
     footer{padding:30px 20px;color:#8f96a3;text-align:center}
     a{color:#cde1ff}
+    #mv-error{display:none;margin-top:8px;padding:10px;border-radius:10px;background:#2a1f1f;color:#ffb3b3;border:1px solid #492d2d;font-size:12px}
   </style>
 </head>
 <body>
@@ -43,9 +45,9 @@
           <div class="price">€9.90</div>
         </div>
 
-        <!-- Положи модель сюда: assets/models/soup_v2.glb  -->
         <model-viewer id="mv-soup"
-          src="assets/models/soup_v2.glb?v=DEV"
+          src="assets/models/soup.glb"
+          ios-src="assets/models/soup1.usdz"
           ar ar-modes="scene-viewer quick-look webxr"
           camera-controls
           shadow-intensity="1"
@@ -55,22 +57,14 @@
           tone-mapping="aces"
           alt="Чорба в глиняной тарелке">
         </model-viewer>
+        <div id="mv-error">Не получилось загрузить модель. Проверь путь <code>assets/models/soup.glb</code> и обнови страницу.</div>
 
         <div class="row">
           <button class="btn" id="btn-ar-1">Посмотреть в AR</button>
           <button class="btn secondary" id="btn-reset-1">Сбросить камеру</button>
         </div>
-        <div class="hint">Совет: поверни модель двумя пальцами, чтобы рассмотреть текстуру. Для iPhone можно добавить файл .usdz (атрибут <code>ios-src</code>).</div>
+        <div class="hint">Совет: поверни модель двумя пальцами, чтобы рассмотреть текстуру. Для iPhone используется <code>ios-src</code>.</div>
       </article>
-
-      <!-- ШАБЛОН ДЛЯ ВТОРОГО БЛЮДА (скопируй и поменяй src/название/цену) -->
-      <!--
-      <article class="card">
-        <div class="top"><div class="title">Паста Болоньезе</div><div class="price">€11.50</div></div>
-        <model-viewer src="assets/models/pasta.glb?v=DEV" ar camera-controls shadow-intensity="1" exposure="1" environment-image="neutral" alt="Паста Болоньезе"></model-viewer>
-        <div class="row"><button class="btn">Посмотреть в AR</button><button class="btn secondary">Сбросить камеру</button></div>
-      </article>
-      -->
     </div>
   </div>
 
@@ -79,21 +73,24 @@
   </footer>
 
   <script>
-    // Обход кэша в режиме разработки: DEV → текущий timestamp
-    document.querySelectorAll('model-viewer').forEach(mv => {
-      if (mv.getAttribute('src') && mv.getAttribute('src').includes('DEV')) {
-        const url = mv.getAttribute('src').replace('DEV', Date.now());
-        mv.setAttribute('src', url);
-      }
-    });
-
-    // Кнопки управления 1-й карточки
+    // Авто-пробитие кэша
     const mv1 = document.getElementById('mv-soup');
+    const bump = (p) => p ? `${p}?v=${Date.now()}` : p;
+    mv1.src = bump(mv1.getAttribute('src'));
+    const ios = mv1.getAttribute('ios-src'); if (ios) mv1.setAttribute('ios-src', bump(ios));
+
+    // Кнопки
     document.getElementById('btn-ar-1').addEventListener('click', () => mv1.activateAR());
     document.getElementById('btn-reset-1').addEventListener('click', () => {
       mv1.resetTurntableRotation();
       mv1.cameraOrbit = '0deg 75deg 100%';
       mv1.fieldOfView = '45deg';
+    });
+
+    // Ошибки загрузки
+    mv1.addEventListener('error', (e) => {
+      document.getElementById('mv-error').style.display = 'block';
+      console.error('model-viewer error:', e.detail && e.detail.type, e);
     });
   </script>
 </body>
