@@ -30,8 +30,7 @@
       "currency": "сом",
       "category": "Салаты",
       "grams": "300 г",
-      "desc": "Греческий салат с овощами, оливками и сыром фета.",
-      "poster": "https://static.tildacdn.one/tild3235-6233-4134-b132-633865373534/DSC00214.jpg"
+      "desc": "Греческий салат с овощами, оливками и сыром фета."
     },
     {
       "id": "green-salad",
@@ -40,8 +39,7 @@
       "currency": "сом",
       "category": "Салаты",
       "grams": "290 г",
-      "desc": "Микс зелени с овощами и лёгкой заправкой.",
-      "poster": "https://static.tildacdn.one/tild3339-3334-4264-b438-653764303832/DSC00237.jpg"
+      "desc": "Микс зелени с овощами и лёгкой заправкой."
     },
     {
       "id": "tabule",
@@ -50,8 +48,7 @@
       "currency": "сом",
       "category": "Салаты",
       "grams": "300 г",
-      "desc": "Ближневосточный салат на булгуре с овощами.",
-      "poster": "https://static.tildacdn.one/tild6661-3162-4665-a465-356431386662/DSC00323_3.jpg"
+      "desc": "Ближневосточный салат на булгуре с овощами."
     },
     {
       "id": "caesar",
@@ -60,8 +57,169 @@
       "currency": "сом",
       "category": "Салаты",
       "grams": "330 г",
-      "desc": "Классический салат с курицей-гриль, крутонами и пармезаном.",
-      "poster": "https://static.tildacdn.one/tild3966-6338-4335-b031-653065666339/DSC00314.jpg"
+      "desc": "Классический салат с курицей-гриль, крутонами и пармезаном."
+    },
+    {
+      "id": "салат-с-лососем",
+      "title": "Салат с лососем",
+      "price": 690,
+      "currency": "сом",
+      "category": "Салаты",
+      "grams": "250 г",
+      "desc": ""
+    },
+    {
+      "id": "салат-с-креветками",
+      "title": "Салат с креветками",
+      "price": 640,
+      "currency": "сом",
+      "category": "Салаты",
+      "grams": "200 г",
+      "desc": ""
+    },
+    {
+      "id": "овощноi-салат",
+      "title": "Овощной салат",
+      "price": 320,
+      "currency": "сом",
+      "category": "Салаты",
+      "grams": "280 г",
+      "desc": ""
+    },
+    {
+      "id": "филадельфиya",
+      "title": "Филадельфия",
+      "price": 790,
+      "currency": "сом",
+      "category": "Роллы",
+      "grams": "250 г",
+      "desc": ""
+    },
+    {
+      "id": "калифорниya",
+      "title": "Калифорния",
+      "price": 640,
+      "currency": "сом",
+      "category": "Роллы",
+      "grams": "500 г",
+      "desc": ""
+    },
+    {
+      "id": "запечeнныi-ролл",
+      "title": "Запечённый ролл",
+      "price": 290,
+      "currency": "сом",
+      "category": "Роллы",
+      "grams": "250 г",
+      "desc": ""
+    },
+    {
+      "id": "ролл-с-копчeным-лососем",
+      "title": "Ролл с копчёным лососем",
+      "price": 290,
+      "currency": "сом",
+      "category": "Роллы",
+      "grams": "320 г",
+      "desc": ""
+    },
+    {
+      "id": "ролл-с-угрeм",
+      "title": "Ролл с угрём",
+      "price": 360,
+      "currency": "сом",
+      "category": "Роллы",
+      "grams": "150 г",
+      "desc": ""
+    },
+    {
+      "id": "брускетта-с-томатами",
+      "title": "Брускетта с томатами",
+      "price": 890,
+      "currency": "сом",
+      "category": "Закуски",
+      "grams": "200 г",
+      "desc": ""
+    },
+    {
+      "id": "сырнаya-тарелка",
+      "title": "Сырная тарелка",
+      "price": 740,
+      "currency": "сом",
+      "category": "Закуски",
+      "grams": "320 г",
+      "desc": ""
+    },
+    {
+      "id": "карпаччо",
+      "title": "Карпаччо",
+      "price": 240,
+      "currency": "сом",
+      "category": "Закуски",
+      "grams": "200 г",
+      "desc": ""
+    },
+    {
+      "id": "тар-тар-из-лососya",
+      "title": "Тар-тар из лосося",
+      "price": 560,
+      "currency": "сом",
+      "category": "Закуски",
+      "grams": "280 г",
+      "desc": ""
+    },
+    {
+      "id": "спринг-роллы",
+      "title": "Спринг-роллы",
+      "price": 240,
+      "currency": "сом",
+      "category": "Закуски",
+      "grams": "200 г",
+      "desc": ""
+    },
+    {
+      "id": "хумус-с-питоi",
+      "title": "Хумус с питой",
+      "price": 990,
+      "currency": "сом",
+      "category": "Закуски",
+      "grams": "280 г",
+      "desc": ""
+    },
+    {
+      "id": "pumpkin-soup",
+      "title": "Тыквенный суп",
+      "price": 420,
+      "currency": "сом",
+      "category": "Супы",
+      "grams": "350 г",
+      "desc": "Тыквенный крем‑суп."
+    },
+    {
+      "id": "okroshka-chicken",
+      "title": "Окрошка с курицей",
+      "price": 390,
+      "currency": "сом",
+      "category": "Супы",
+      "grams": "450 г",
+      "desc": "Летний холодный суп."
+    },
+    {
+      "id": "borsch",
+      "title": "Борщ",
+      "price": 540,
+      "currency": "сом",
+      "category": "Супы",
+      "grams": "450/40 г",
+      "desc": "Борщ со сметаной и зеленью."
+    },
+    {
+      "id": "tom-yam",
+      "title": "Том-ям",
+      "price": 820,
+      "currency": "сом",
+      "category": "Супы",
+      "grams": "350/90 г",
+      "desc": "Пикантный суп с креветками и томатами."
     },
     {
       "id": "tajin-soup",
@@ -71,11 +229,523 @@
       "category": "Супы",
       "grams": "350 г",
       "desc": "Ароматный суп в марокканском стиле. Демонстрационная 3D‑модель.",
-      "poster": "https://askento42.github.io/AR-android/assets/posters/soup_poster.jpg",
       "model": {
         "glb": "https://askento42.github.io/AR-android/assets/models/soup.glb",
         "usdz": "https://askento42.github.io/AR-android/assets/models/soup1.usdz"
       }
+    },
+    {
+      "id": "хинкали",
+      "title": "Хинкали",
+      "price": 1690,
+      "currency": "сом",
+      "category": "В тесте",
+      "grams": "350 г",
+      "desc": ""
+    },
+    {
+      "id": "самса",
+      "title": "Самса",
+      "price": 320,
+      "currency": "сом",
+      "category": "В тесте",
+      "grams": "320 г",
+      "desc": ""
+    },
+    {
+      "id": "хачапури-по-аджарски",
+      "title": "Хачапури по-аджарски",
+      "price": 420,
+      "currency": "сом",
+      "category": "В тесте",
+      "grams": "350 г",
+      "desc": ""
+    },
+    {
+      "id": "чебуреки",
+      "title": "Чебуреки",
+      "price": 420,
+      "currency": "сом",
+      "category": "В тесте",
+      "grams": "150 г",
+      "desc": ""
+    },
+    {
+      "id": "пельмени",
+      "title": "Пельмени",
+      "price": 590,
+      "currency": "сом",
+      "category": "В тесте",
+      "grams": "400 г",
+      "desc": ""
+    },
+    {
+      "id": "карбонара",
+      "title": "Карбонара",
+      "price": 390,
+      "currency": "сом",
+      "category": "Паста",
+      "grams": "400 г",
+      "desc": ""
+    },
+    {
+      "id": "болоньезе",
+      "title": "Болоньезе",
+      "price": 240,
+      "currency": "сом",
+      "category": "Паста",
+      "grams": "320 г",
+      "desc": ""
+    },
+    {
+      "id": "альфредо",
+      "title": "Альфредо",
+      "price": 390,
+      "currency": "сом",
+      "category": "Паста",
+      "grams": "150 г",
+      "desc": ""
+    },
+    {
+      "id": "песто",
+      "title": "Песто",
+      "price": 320,
+      "currency": "сом",
+      "category": "Паста",
+      "grams": "200 г",
+      "desc": ""
+    },
+    {
+      "id": "с-морепродуктами",
+      "title": "С морепродуктами",
+      "price": 390,
+      "currency": "сом",
+      "category": "Паста",
+      "grams": "250 г",
+      "desc": ""
+    },
+    {
+      "id": "четыре-сыра",
+      "title": "Четыре сыра",
+      "price": 790,
+      "currency": "сом",
+      "category": "Паста",
+      "grams": "380 г",
+      "desc": ""
+    },
+    {
+      "id": "стеiк-рибаi",
+      "title": "Стейк рибай",
+      "price": 480,
+      "currency": "сом",
+      "category": "Основные блюда",
+      "grams": "150 г",
+      "desc": ""
+    },
+    {
+      "id": "стеiк-ковбоi",
+      "title": "Стейк ковбой",
+      "price": 690,
+      "currency": "сом",
+      "category": "Основные блюда",
+      "grams": "400 г",
+      "desc": ""
+    },
+    {
+      "id": "филе-миньон",
+      "title": "Филе-миньон",
+      "price": 1290,
+      "currency": "сом",
+      "category": "Основные блюда",
+      "grams": "150 г",
+      "desc": ""
+    },
+    {
+      "id": "куринаya-грудка-гриль",
+      "title": "Куриная грудка гриль",
+      "price": 640,
+      "currency": "сом",
+      "category": "Основные блюда",
+      "grams": "280 г",
+      "desc": ""
+    },
+    {
+      "id": "лосось-гриль",
+      "title": "Лосось гриль",
+      "price": 190,
+      "currency": "сом",
+      "category": "Основные блюда",
+      "grams": "320 г",
+      "desc": ""
+    },
+    {
+      "id": "котлета-по-киевски",
+      "title": "Котлета по-киевски",
+      "price": 420,
+      "currency": "сом",
+      "category": "Основные блюда",
+      "grams": "350 г",
+      "desc": ""
+    },
+    {
+      "id": "свинина-териyaки",
+      "title": "Свинина терияки",
+      "price": 590,
+      "currency": "сом",
+      "category": "Основные блюда",
+      "grams": "400 г",
+      "desc": ""
+    },
+    {
+      "id": "говyaжьи-рeбра",
+      "title": "Говяжьи рёбра",
+      "price": 1690,
+      "currency": "сом",
+      "category": "Основные блюда",
+      "grams": "300 г",
+      "desc": ""
+    },
+    {
+      "id": "асадо",
+      "title": "Асадо",
+      "price": 240,
+      "currency": "сом",
+      "category": "Аргентинский гриль",
+      "grams": "250 г",
+      "desc": ""
+    },
+    {
+      "id": "чоризо",
+      "title": "Чоризо",
+      "price": 320,
+      "currency": "сом",
+      "category": "Аргентинский гриль",
+      "grams": "200 г",
+      "desc": ""
+    },
+    {
+      "id": "пиканьya",
+      "title": "Пиканья",
+      "price": 190,
+      "currency": "сом",
+      "category": "Аргентинский гриль",
+      "grams": "250 г",
+      "desc": ""
+    },
+    {
+      "id": "стеiк-фланк",
+      "title": "Стейк фланк",
+      "price": 360,
+      "currency": "сом",
+      "category": "Аргентинский гриль",
+      "grams": "320 г",
+      "desc": ""
+    },
+    {
+      "id": "крылышки-гриль",
+      "title": "Крылышки гриль",
+      "price": 240,
+      "currency": "сом",
+      "category": "Аргентинский гриль",
+      "grams": "250 г",
+      "desc": ""
+    },
+    {
+      "id": "рибаi",
+      "title": "Рибай",
+      "price": 790,
+      "currency": "сом",
+      "category": "Стейки",
+      "grams": "200 г",
+      "desc": ""
+    },
+    {
+      "id": "ньyu-iорк",
+      "title": "Нью-Йорк",
+      "price": 480,
+      "currency": "сом",
+      "category": "Стейки",
+      "grams": "320 г",
+      "desc": ""
+    },
+    {
+      "id": "тибоун",
+      "title": "Тибоун",
+      "price": 390,
+      "currency": "сом",
+      "category": "Стейки",
+      "grams": "400 г",
+      "desc": ""
+    },
+    {
+      "id": "стриплоiн",
+      "title": "Стриплойн",
+      "price": 690,
+      "currency": "сом",
+      "category": "Стейки",
+      "grams": "320 г",
+      "desc": ""
+    },
+    {
+      "id": "мачете",
+      "title": "Мачете",
+      "price": 890,
+      "currency": "сом",
+      "category": "Стейки",
+      "grams": "380 г",
+      "desc": ""
+    },
+    {
+      "id": "ассорти-гриль",
+      "title": "Ассорти гриль",
+      "price": 320,
+      "currency": "сом",
+      "category": "Мясное ассорти",
+      "grams": "350 г",
+      "desc": ""
+    },
+    {
+      "id": "колбаски-гриль",
+      "title": "Колбаски гриль",
+      "price": 520,
+      "currency": "сом",
+      "category": "Мясное ассорти",
+      "grams": "400 г",
+      "desc": ""
+    },
+    {
+      "id": "бекон-микс",
+      "title": "Бекон-микс",
+      "price": 990,
+      "currency": "сом",
+      "category": "Мясное ассорти",
+      "grams": "250 г",
+      "desc": ""
+    },
+    {
+      "id": "деликатесное-ассорти",
+      "title": "Деликатесное ассорти",
+      "price": 520,
+      "currency": "сом",
+      "category": "Мясное ассорти",
+      "grams": "150 г",
+      "desc": ""
+    },
+    {
+      "id": "маргарита",
+      "title": "Маргарита",
+      "price": 190,
+      "currency": "сом",
+      "category": "Пицца",
+      "grams": "350 г",
+      "desc": ""
+    },
+    {
+      "id": "пепперони",
+      "title": "Пепперони",
+      "price": 290,
+      "currency": "сом",
+      "category": "Пицца",
+      "grams": "380 г",
+      "desc": ""
+    },
+    {
+      "id": "четыре-сыра",
+      "title": "Четыре сыра",
+      "price": 390,
+      "currency": "сом",
+      "category": "Пицца",
+      "grams": "400 г",
+      "desc": ""
+    },
+    {
+      "id": "гаваiскаya",
+      "title": "Гавайская",
+      "price": 390,
+      "currency": "сом",
+      "category": "Пицца",
+      "grams": "350 г",
+      "desc": ""
+    },
+    {
+      "id": "барбекyu",
+      "title": "Барбекю",
+      "price": 890,
+      "currency": "сом",
+      "category": "Пицца",
+      "grams": "500 г",
+      "desc": ""
+    },
+    {
+      "id": "дьyaбло",
+      "title": "Дьябло",
+      "price": 690,
+      "currency": "сом",
+      "category": "Пицца",
+      "grams": "380 г",
+      "desc": ""
+    },
+    {
+      "id": "вегетарианскаya",
+      "title": "Вегетарианская",
+      "price": 290,
+      "currency": "сом",
+      "category": "Пицца",
+      "grams": "350 г",
+      "desc": ""
+    },
+    {
+      "id": "мyaснаya",
+      "title": "Мясная",
+      "price": 560,
+      "currency": "сом",
+      "category": "Пицца",
+      "grams": "500 г",
+      "desc": ""
+    },
+    {
+      "id": "чизкеiк",
+      "title": "Чизкейк",
+      "price": 640,
+      "currency": "сом",
+      "category": "Десерты",
+      "grams": "450 г",
+      "desc": ""
+    },
+    {
+      "id": "тирамису",
+      "title": "Тирамису",
+      "price": 240,
+      "currency": "сом",
+      "category": "Десерты",
+      "grams": "500 г",
+      "desc": ""
+    },
+    {
+      "id": "наполеон",
+      "title": "Наполеон",
+      "price": 390,
+      "currency": "сом",
+      "category": "Десерты",
+      "grams": "380 г",
+      "desc": ""
+    },
+    {
+      "id": "шоколадныi-фондан",
+      "title": "Шоколадный фондан",
+      "price": 1290,
+      "currency": "сом",
+      "category": "Десерты",
+      "grams": "280 г",
+      "desc": ""
+    },
+    {
+      "id": "медовик",
+      "title": "Медовик",
+      "price": 690,
+      "currency": "сом",
+      "category": "Десерты",
+      "grams": "300 г",
+      "desc": ""
+    },
+    {
+      "id": "мороженое",
+      "title": "Мороженое",
+      "price": 290,
+      "currency": "сом",
+      "category": "Десерты",
+      "grams": "380 г",
+      "desc": ""
+    },
+    {
+      "id": "картофель-фри",
+      "title": "Картофель фри",
+      "price": 190,
+      "currency": "сом",
+      "category": "Гарниры",
+      "grams": "280 г",
+      "desc": ""
+    },
+    {
+      "id": "картофельное-пyuре",
+      "title": "Картофельное пюре",
+      "price": 420,
+      "currency": "сом",
+      "category": "Гарниры",
+      "grams": "450 г",
+      "desc": ""
+    },
+    {
+      "id": "рис",
+      "title": "Рис",
+      "price": 420,
+      "currency": "сом",
+      "category": "Гарниры",
+      "grams": "250 г",
+      "desc": ""
+    },
+    {
+      "id": "овощи-гриль",
+      "title": "Овощи гриль",
+      "price": 640,
+      "currency": "сом",
+      "category": "Гарниры",
+      "grams": "350 г",
+      "desc": ""
+    },
+    {
+      "id": "киноа",
+      "title": "Киноа",
+      "price": 190,
+      "currency": "сом",
+      "category": "Гарниры",
+      "grams": "150 г",
+      "desc": ""
+    },
+    {
+      "id": "спаржа",
+      "title": "Спаржа",
+      "price": 790,
+      "currency": "сом",
+      "category": "Гарниры",
+      "grams": "500 г",
+      "desc": ""
+    },
+    {
+      "id": "фокачча",
+      "title": "Фокачча",
+      "price": 480,
+      "currency": "сом",
+      "category": "Хлеб",
+      "grams": "300 г",
+      "desc": ""
+    },
+    {
+      "id": "чиабатта",
+      "title": "Чиабатта",
+      "price": 190,
+      "currency": "сом",
+      "category": "Хлеб",
+      "grams": "400 г",
+      "desc": ""
+    },
+    {
+      "id": "лепeшки",
+      "title": "Лепёшки",
+      "price": 560,
+      "currency": "сом",
+      "category": "Хлеб",
+      "grams": "200 г",
+      "desc": ""
+    },
+    {
+      "id": "тосты",
+      "title": "Тосты",
+      "price": 240,
+      "currency": "сом",
+      "category": "Хлеб",
+      "grams": "200 г",
+      "desc": ""
     }
   ]
 }
