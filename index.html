@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Seven — 3D‑меню с AR</title>
+  <title>Seven — 3D-меню с AR</title>
   <meta name="description" content="Интерактивное меню ресторана Seven с 3D/AR моделями блюд." />
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
@@ -31,14 +31,12 @@
     .controls{display:flex;gap:8px;margin-top:12px}
     .btn{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer}
     .btn.primary{background:#1b1b1b;color:#fff;border-color:#1b1b1b}
-    .debug{position:fixed;top:10px;left:10px;background:#000;color:#fff;padding:4px 10px;border-radius:6px;font-size:14px;font-weight:700}
   </style>
 </head>
 <body>
-  <div class="debug">СБОРКА V7</div>
   <div class="container">
     <header>
-      <div class="logo"><div class="logo-badge">7</div><div>Seven — 3D‑меню с AR</div></div>
+      <div class="logo"><div class="logo-badge">7</div><div>Seven — 3D-меню с AR</div></div>
       <a class="btn" href="tel:+996555000777">Забронировать</a>
     </header>
 
@@ -65,19 +63,13 @@
   </div>
 
   <script>
+    // модель для Суп Таджин
     const TAJIN_MODEL = {
       glb: "https://askento42.github.io/AR-android/assets/models/soup.glb",
       usdz: "https://askento42.github.io/AR-android/assets/models/soup1.usdz"
     };
-    const STATE = { data:null, cat:'Все', active:null };
-    let POSTER_MAP = {};
 
-    async function loadPosterMap(){
-      try{
-        const r = await fetch('./data/posters.json?_=' + Date.now());
-        if(r.ok) POSTER_MAP = await r.json();
-      }catch(e){}
-    }
+    const STATE = { data:null, posters:null, cat:'Все', active:null };
 
     function norm(x){
       const nx = {
@@ -88,13 +80,16 @@
         category: x.category || x['категория'] || 'Прочее',
         grams: x.grams || x['граммовка'] || x['вес'] || null,
         desc: x.desc || x['описание'] || x['desc'] || '',
-        poster: x.poster || x['плакат'] || (POSTER_MAP[x.title] || null),
+        poster: x.poster || x['плакат'] || null,
         badges: x.badges || x['значки'] || [],
         model: x.model || x['модель'] || null
       };
       const t = nx.title.trim().toLowerCase();
       if (!nx.model && (t.includes('таджин') || t.includes('tajin'))) {
         nx.model = { ...TAJIN_MODEL };
+      }
+      if (!nx.poster && STATE.posters && STATE.posters[nx.title]) {
+        nx.poster = STATE.posters[nx.title];
       }
       return nx;
     }
@@ -107,8 +102,12 @@
     }
 
     async function load(){
-      await loadPosterMap();
-      const url = './data/menu.json?v=prod&_=' + Date.now();
+      try {
+        const postersResp = await fetch('https://askento42.github.io/AR-android/data/posters.json?_=' + Date.now());
+        STATE.posters = await postersResp.json();
+      } catch(e){ STATE.posters = {}; }
+
+      const url = 'https://askento42.github.io/AR-android/data/menu.json?_=' + Date.now();
       const r = await fetch(url);
       const raw = await r.json();
 
@@ -120,7 +119,7 @@
         })(raw);
         pools.sort((a,b)=>b.length-a.length);
         for(const arr of pools){
-          const ok = arr.some(o => (o && (o.title || o['название']) && (('цена' in o) || ('price' in o) || ('валюта' in o))));
+          const ok = arr.some(o => (o && (o.title || o['название']) && (('цена' in o) || ('price' in o) || ('валюта' in o)) ));
           if (ok){ itemsRaw = arr; break; }
         }
       }
@@ -139,7 +138,7 @@
       const all = ['Все', ...STATE.data.cats];
       all.forEach(cat=>{
         const b=document.createElement('button');
-        b.className='chip'+(STATE.cat===cat?' active':'');
+        b.className='chip'+(STATE.cat===cat?' active':'' );
         b.textContent=cat;
         b.onclick=()=>{ STATE.cat=cat; renderList(); };
         root.appendChild(b);
@@ -170,15 +169,15 @@
       document.getElementById('vd').textContent = x.desc || '';
       const wrap=document.getElementById('viewer');
       if(x.model && x.model.glb && x.model.usdz){
-        wrap.innerHTML = \`
-        <model-viewer src="\${x.model.glb}" ios-src="\${x.model.usdz}" ar ar-modes="webxr scene-viewer quick-look"
+        wrap.innerHTML = `
+        <model-viewer src="${x.model.glb}" ios-src="${x.model.usdz}" ar ar-modes="webxr scene-viewer quick-look"
           camera-controls auto-rotate shadow-intensity="1" exposure="1.1"
           style="width:100%;height:460px;background:#f6f2ed;border-radius:12px">
-        </model-viewer>\`;
+        </model-viewer>`;
         const glb=document.getElementById('glb'); glb.style.display='inline-block'; glb.href=x.model.glb;
         const usdz=document.getElementById('usdz'); usdz.style.display='inline-block'; usdz.href=x.model.usdz;
       } else {
-        wrap.innerHTML = \`<div style="text-align:center;color:#9ca3af; padding: 36px 0;">3D/AR недоступно для этого блюда</div>\`;
+        wrap.innerHTML = `<div style="text-align:center;color:#9ca3af; padding: 36px 0;">3D/AR недоступно для этого блюда</div>`;
         document.getElementById('glb').style.display='none';
         document.getElementById('usdz').style.display='none';
       }
