@@ -52,7 +52,7 @@
     { "id": "fried-shrimp", "title": "Креветки жареные с томатами", "grams": "190 г", "price": 860, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
     { "id": "veggie-cut", "title": "Овощная нарезка", "grams": "880 г", "price": 780, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
     { "id": "antipasto", "title": "Антипасто", "grams": "750 г", "price": 1590, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
-    { "id": "fish-chips", "title": "Фиш & чипс", "grams": "350/80 г", "price": 1250, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
+    { "id": "fish-chips", "title": "Фиш и чипс", "grams": "350/80 г", "price": 1250, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
     { "id": "company-assorti", "title": "Ассорти на компанию", "grams": "1 кг", "price": 1590, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
 
     { "id": "tajin-soup", "title": "Суп Таджин", "grams": "350 г", "price": 390, "currency": "сом", "category": "Супы",
@@ -102,7 +102,7 @@
     { "id": "meat-assorti-2", "title": "Мясное ассорти сет 2", "grams": "2.3 кг", "price": 8800, "currency": "сом", "category": "Мясное ассорти" },
 
     { "id": "pepperoni", "title": "Пепперони", "grams": "30 см/20 см", "price": 640, "currency": "сом", "category": "Пицца и пиццеты" },
-    { "id": "chicken-pizza", "title": "Пицца с курицей", "grams": "30 см/20 см", "price": 780, "currency": "сом", "category": "Пицца и пиццеты" },
+    { "id": "chicken-pizza", "title": "Пицца с куриной грудкой", "grams": "30 см/20 см", "price": 780, "currency": "сом", "category": "Пицца и пиццеты" },
     { "id": "cheese-pizza", "title": "Четыре сыра", "grams": "30 см/20 см", "price": 780, "currency": "сом", "category": "Пицца и пиццеты" },
     { "id": "pizza-chili", "title": "Пицца чили", "grams": "30 см/20 см", "price": 720, "currency": "сом", "category": "Пицца и пиццеты" },
     { "id": "margarita", "title": "Маргарита", "grams": "30 см/20 см", "price": 620, "currency": "сом", "category": "Пицца и пиццеты" },
@@ -113,4 +113,22 @@
     { "id": "fondant", "title": "Шоколадный фондан", "grams": "130 г", "price": 580, "currency": "сом", "category": "Десерты" },
     { "id": "tres-leches", "title": "Трес лечес", "grams": "160 г", "price": 360, "currency": "сом", "category": "Десерты" },
     { "id": "carrot-cake", "title": "Морковный торт", "grams": "150 г", "price": 340, "currency": "сом", "category": "Десерты" },
-    { "id": "honey-cake", "title": "Медовик", "grams
+    { "id": "honey-cake", "title": "Медовик", "grams": "140 г", "price": 340, "currency": "сом", "category": "Десерты" },
+    { "id": "fruit-salad", "title": "Фруктовая нарезка", "grams": "2400 г", "price": 3500, "currency": "сом", "category": "Десерты" },
+    { "id": "tart", "title": "Тарт с голубикой", "grams": "130 г", "price": 480, "currency": "сом", "category": "Десерты" },
+    { "id": "crepe-cake", "title": "Торт блинный", "grams": "210 г", "price": 480, "currency": "сом", "category": "Десерты" },
+    { "id": "banana-republic", "title": "Banana Republic", "grams": "230 г", "price": 490, "currency": "сом", "category": "Десерты" },
+
+    { "id": "mashed-potato", "title": "Картофельное пюре", "grams": "150 г", "price": 190, "currency": "сом", "category": "Гарниры" },
+    { "id": "fries", "title": "Картофель фри", "grams": "130/40 г", "price": 250, "currency": "сом", "category": "Гарниры" },
+    { "id": "fries-parmesan", "title": "Картофель фри с пармезаном", "grams": "140/40 г", "price": 290, "currency": "сом", "category": "Гарниры" },
+    { "id": "basmati", "title": "Рис басмати", "grams": "100 г", "price": 190, "currency": "сом", "category": "Гарниры" },
+    { "id": "veggies", "title": "Овощи на гриле", "grams": "300 г", "price": 340, "currency": "сом", "category": "Гарниры" },
+
+    { "id": "ciabatta", "title": "Чиабатта", "grams": "80/20 г", "price": 100, "currency": "сом", "category": "Хлеб" },
+    { "id": "rye-ciabatta", "title": "Чиабатта ржаная", "grams": "80/20 г", "price": 100, "currency": "сом", "category": "Хлеб" },
+    { "id": "grissini", "title": "Гриссини", "grams": "3 шт", "price": 100, "currency": "сом", "category": "Хлеб" },
+    { "id": "bread-basket", "title": "Хлебная корзина", "grams": "160/20 г", "price": 290, "currency": "сом", "category": "Хлеб" },
+    { "id": "arab-bread", "title": "Арабские лепешки", "grams": "80 г", "price": 100, "currency": "сом", "category": "Хлеб" }
+  ]
+}
