@@ -5,97 +5,125 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Seven — 3D-меню с AR</title>
   <meta name="description" content="Интерактивное меню ресторана Seven с 3D/AR моделями блюд." />
+
+  <!-- model-viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
   <style>
-    :root { --bg:#f6f2ed; --card:#ffffff; --text:#1b1b1b; --muted:#6b7280; --border:#e5e7eb; --accent:#7a2dff; --radius:16px; }
-    *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
-    a{color:#3b82f6;text-decoration:none}
+    /* —— Seven theme ———————————————————————————— */
+    :root{
+      /* тёплая бежево-кофейная гамма */
+      --bg:#d9cfbf;            /* фон страницы (как на скринах) */
+      --card:#f4efe7;          /* карточки/контейнеры */
+      --surface:#ffffff;       /* светлые внутренние блоки */
+      --text:#1c1b1a;          /* основной текст */
+      --muted:#6b665f;         /* вторичный текст */
+      --border:#e3dacc;        /* светлая граница */
+      --shadow:0 12px 40px rgba(59,45,33,.12);
+      --radius:18px;
+      --radius-sm:14px;
+      --accent:#2a2a2a;        /* акцентные кнопки (чёрный) */
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial}
+    img{display:block;max-width:100%}
+    a{color:inherit;text-decoration:none}
+
     .container{max-width:1280px;margin:0 auto;padding:24px}
     header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-    .logo{display:flex;align-items:center;gap:12px;font-weight:800}
-    .logo-badge{width:40px;height:40px;border-radius:12px;background:#1b1b1b;color:#fff;display:grid;place-items:center}
+    .brand{display:flex;gap:12px;align-items:center}
+    .badge{width:42px;height:42px;border-radius:12px;background:#1a1a1a;color:#fff;display:grid;place-items:center;font-weight:800}
 
-    /* ——— Главная (категории) ——— */
-    #home{display:block}
+    .btn{padding:10px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer}
+    .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .btn.ghost{background:transparent}
+
+    /* — главная: плитка категорий — */
+    #home{}
     .hero{display:flex;justify-content:space-between;align-items:flex-end;margin:8px 0 20px}
-    .hero h1{font-size:22px;margin:0}
-    .grid{display:grid;gap:14px;grid-template-columns:repeat(5,minmax(0,1fr))}
+    .hero h1{margin:0;font-size:28px;letter-spacing:.5px}
+    .grid{display:grid;gap:16px;grid-template-columns:repeat(5,minmax(0,1fr))}
     @media (max-width:1100px){ .grid{grid-template-columns:repeat(4,1fr)} }
     @media (max-width:880px) { .grid{grid-template-columns:repeat(3,1fr)} }
     @media (max-width:680px) { .grid{grid-template-columns:repeat(2,1fr)} }
     .tile{
-      background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px;
-      cursor:pointer; display:flex; flex-direction:column; gap:10px; transition:transform .12s ease, box-shadow .12s ease;
-      min-height:120px;
+      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+      padding:16px; min-height:120px; cursor:pointer; display:flex; flex-direction:column; gap:10px;
+      transition:.15s ease; box-shadow:var(--shadow)
     }
-    .tile:hover{transform:translateY(-2px); box-shadow:0 6px 28px rgba(0,0,0,.06)}
-    .tile .name{font-weight:700}
+    .tile:hover{transform:translateY(-2px)}
+    .tile .name{font-weight:800; letter-spacing:.3px}
     .tile .meta{color:var(--muted); font-size:13px}
-    .tile .badge{
-      align-self:flex-start; border-radius:12px; padding:6px 10px; font-size:12px; font-weight:700;
-      background:#f1f5f9; color:#0f172a; border:1px dashed #cbd5e1;
-    }
+    .chip{align-self:flex-start; border-radius:999px; padding:6px 10px; font-size:12px;
+      border:1px dashed #cbbda9; background:#efe6d9; color:#2b2117}
 
-    /* ——— Экран списка/просмотра ——— */
+    /* — экран категории — */
     #menu{display:none}
-    .topbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-    .btn{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer}
-    .btn.primary{background:#1b1b1b;color:#fff;border-color:#1b1b1b}
-    .btn.ghost{background:transparent}
-    .counter{color:#6b7280;font-weight:700;margin-left:auto}
+    .topbar{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+    .where{font-weight:900;letter-spacing:.4px}
+    .counter{margin-left:auto;color:var(--muted);font-weight:600}
 
-    .layout{display:grid;grid-template-columns:380px 1fr;gap:20px}
+    .layout{display:grid;grid-template-columns:420px 1fr;gap:22px}
     @media (max-width:980px){ .layout{grid-template-columns:1fr} }
+
     .list{display:grid;gap:12px}
-    .item{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer}
-    .thumb, .thumb-ph{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:18px}
-    .thumb-ph{background:linear-gradient(135deg,#e2e8f0,#f8fafc);color:#475569}
-    .meta h3{margin:0 0 4px 0;font-size:16px}
+    .item{
+      display:grid;grid-template-columns:68px 1fr;gap:12px;align-items:center;
+      padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;
+      transition:.15s ease
+    }
+    .item:hover{transform:translateY(-1px)}
+    .thumb{
+      width:68px;height:68px;border-radius:14px;background:linear-gradient(135deg,#efe6db,#faf7f2);
+      display:grid;place-items:center;font-weight:900;font-size:20px;color:#463e34;border:1px solid var(--border)
+    }
+    .meta h3{margin:0 0 4px 0;font-size:17px}
     .meta .sub{font-size:13px;color:var(--muted)}
 
-    .pad{padding:12px;border:1px solid var(--border);border-radius:16px;background:var(--card)}
-    .viewer{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:8px;min-height:360px;display:grid;align-items:center}
-    .titlebar{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px}
-    .price{font-weight:700}
-    .controls{display:flex;gap:8px;margin-top:12px}
+    .pad{padding:14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .viewer{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);padding:10px;min-height:380px;display:grid;align-items:center}
+    .titlebar{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px}
+    .price{font-weight:900}
+    .controls{display:flex;gap:10px;margin-top:12px}
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div class="logo"><div class="logo-badge">7</div><div>Seven — 3D-меню с AR</div></div>
+      <div class="brand"><div class="badge">7</div><div style="font-weight:900">Seven — 3D-меню с AR</div></div>
       <a class="btn" href="tel:+996555000777">Забронировать</a>
     </header>
 
-    <!-- Главная: сетка категорий -->
+    <!-- Главная: категории -->
     <section id="home">
       <div class="hero">
-        <h1>Что сегодня попробуем?</h1>
+        <h1>Меню Seven</h1>
         <button id="showAll" class="btn ghost">Показать все блюда</button>
       </div>
       <div id="catsGrid" class="grid"></div>
     </section>
 
-    <!-- Экран со списком и просмотром (без вкладок категорий) -->
+    <!-- Экран категории -->
     <section id="menu">
       <div class="topbar">
         <button id="backBtn" class="btn">← К категориям</button>
-        <div id="where" style="font-weight:700"></div>
-        <div id="counter" class="counter">Загрузка…</div>
-        <a class="btn" href="tel:+996555000777">Позвонить</a>
+        <div id="where" class="where"></div>
+        <div id="counter" class="counter"></div>
+        <a class="btn primary" href="tel:+996555000777">Позвонить</a>
       </div>
 
       <div class="layout">
         <div class="list" id="list"></div>
         <div class="pad">
           <div class="viewer" id="viewer">
-            <div style="text-align:center;color:#9ca3af">Выберите блюдо слева</div>
+            <div style="text-align:center;color:#9a938a">Выберите блюдо слева</div>
           </div>
           <div class="titlebar">
             <h2 id="vt">—</h2>
             <div class="price" id="vp">—</div>
           </div>
-          <div id="vd" style="color:#6b7280;margin-top:6px">—</div>
+          <div id="vd" style="color:#7b746c;margin-top:6px">—</div>
           <div class="controls">
             <a id="glb" class="btn" style="display:none" target="_blank">GLB</a>
             <a id="usdz" class="btn" style="display:none" target="_blank">USDZ</a>
@@ -106,101 +134,88 @@
   </div>
 
   <script>
-    const STATE = { data:null, cat:null, active:null };
     const $ = s => document.querySelector(s);
-    const money = (n,c)=> n==null?'—':(new Intl.NumberFormat('ru-RU').format(n)+' '+(({"сом":"KGS","kgs":"KGS","сомы":"KGS"})[(c||'').toLowerCase()]||c||'KGS'));
+    const STATE = { data:null, cat:null, active:null };
+
+    const money = (n,c)=>{
+      if(n==null) return '—';
+      const map={"сом":"KGS","сомы":"KGS","kgs":"KGS"};
+      const code = map[(c||'').toLowerCase()] || c || 'KGS';
+      return new Intl.NumberFormat('ru-RU').format(n) + ' ' + code;
+    };
 
     async function load(){
-      const url = './data/menu.json?_=' + Date.now();
-      const r = await fetch(url);
+      const r = await fetch('./data/menu.json?_=' + Date.now());
       const raw = await r.json();
-      const cats = raw.categories || [];
-      const items = raw.items || [];
-      STATE.data = { cats, items };
-
-      bindCommon();
+      STATE.data = { cats: raw.categories || [], items: raw.items || [] };
+      bind();
       renderHome();
     }
 
-    function bindCommon(){
-      $('#backBtn').onclick = () => showHome();
-      $('#showAll').onclick = () => { STATE.cat = 'Все'; showMenu(); renderList(); };
+    function bind(){
+      $('#backBtn').onclick = showHome;
+      $('#showAll').onclick = ()=>{ STATE.cat='Все'; showMenu(); renderList(); };
     }
 
-    function showHome(){
-      $('#menu').style.display = 'none';
-      $('#home').style.display = 'block';
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
+    function showHome(){ $('#menu').style.display='none'; $('#home').style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
     function showMenu(){
-      $('#home').style.display = 'none';
-      $('#menu').style.display = 'block';
-      $('#where').textContent = STATE.cat && STATE.cat!=='Все' ? STATE.cat : 'Все блюда';
+      $('#home').style.display='none'; $('#menu').style.display='block';
+      $('#where').textContent = STATE.cat==='Все' ? 'Все блюда' : STATE.cat || 'Меню';
       $('#counter').textContent = `Категории: ${STATE.data.cats.length} • Блюда: ${STATE.data.items.length}`;
       window.scrollTo({top:0,behavior:'smooth'});
     }
 
-    // ---------- Главная (плитка категорий)
     function renderHome(){
       const grid = $('#catsGrid'); grid.innerHTML = '';
-      // посчитаем количество блюд в каждой категории
       const counts = Object.fromEntries(STATE.data.cats.map(c=>[c,0]));
       for(const it of STATE.data.items){ if(counts[it.category]!=null) counts[it.category]++; }
       STATE.data.cats.forEach(cat=>{
-        const el = document.createElement('div');
-        el.className = 'tile';
-        el.innerHTML = `
-          <div class="badge">${counts[cat]} поз.</div>
-          <div class="name">${cat}</div>
-          <div class="meta">Откройте подборку блюд</div>
-        `;
-        el.onclick = () => { STATE.cat = cat; showMenu(); renderList(); };
+        const el=document.createElement('div'); el.className='tile';
+        el.innerHTML = `<div class="chip">${counts[cat]} поз.</div><div class="name">${cat}</div><div class="meta">Открыть раздел</div>`;
+        el.onclick=()=>{ STATE.cat=cat; showMenu(); renderList(); };
         grid.appendChild(el);
       });
     }
 
-    // ---------- Список блюд и просмотр
-    function createThumb(title){
-      const ph = document.createElement('div');
-      ph.className = 'thumb-ph';
-      ph.textContent = (title||'?').trim()[0] || '?';
-      return ph;
+    function thumbLetter(title){
+      const el=document.createElement('div'); el.className='thumb';
+      el.textContent = (title||'?').trim()[0]?.toUpperCase() || '?';
+      return el;
     }
 
     function renderList(){
       const root=$('#list'); root.innerHTML='';
-      const items = STATE.data.items.filter(x => (STATE.cat==='Все' || !STATE.cat) ? true : x.category===STATE.cat);
-      items.forEach(x=>{
+      const list = STATE.data.items.filter(x => (STATE.cat==='Все' || !STATE.cat) ? true : x.category===STATE.cat);
+      list.forEach(x=>{
         const el=document.createElement('div'); el.className='item';
-        const thumb = createThumb(x.title);
-        const meta = document.createElement('div'); meta.className='meta';
-        meta.innerHTML = `<h3>${x.title}</h3><div class="sub">${(x.grams||'').trim()} ${x.price!=null?' • '+money(x.price, x.currency):''}</div>`;
-        el.appendChild(thumb); el.appendChild(meta);
+        const t=thumbLetter(x.title);
+        const m=document.createElement('div'); m.className='meta';
+        m.innerHTML=`<h3>${x.title}</h3><div class="sub">${(x.note?x.note+' • ':'')}${(x.grams||'').trim()}${x.price!=null?' • '+money(x.price,x.currency):''}</div>`;
+        el.appendChild(t); el.appendChild(m);
         el.onclick=()=>openItem(x);
         root.appendChild(el);
       });
-      if(items[0]) openItem(items[0]);
+      if(list[0]) openItem(list[0]);
     }
 
     function openItem(x){
       STATE.active=x;
       $('#vt').textContent=x.title;
       $('#vp').textContent=x.price!=null?money(x.price,x.currency):'—';
-      $('#vd').textContent=x.desc||'';
+      $('#vd').textContent = x.desc || x.note || '';
       const wrap=$('#viewer');
 
-      if(x.model && x.model.glb && x.model.usdz){
+      if(x.model?.glb && x.model?.usdz){
         wrap.innerHTML = `
           <model-viewer src="${x.model.glb}" ios-src="${x.model.usdz}" ar
             ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate
-            shadow-intensity="1" exposure="1.1"
-            style="width:100%;height:460px;background:#f6f2ed;border-radius:12px"></model-viewer>`;
-        const glb=$('#glb'); glb.style.display='inline-block'; glb.href=x.model.glb;
-        const usdz=$('#usdz'); usdz.style.display='inline-block'; usdz.href=x.model.usdz;
+            shadow-intensity="1" exposure="1.08"
+            style="width:100%;height:480px;background:var(--card);border-radius:18px"></model-viewer>`;
+        $('#glb').style.display='inline-block'; $('#glb').href=x.model.glb;
+        $('#usdz').style.display='inline-block'; $('#usdz').href=x.model.usdz;
       } else {
-        wrap.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:60px 0;">3D/AR и фото появятся позже</div>`;
-        $('#glb').style.display='none';
-        $('#usdz').style.display='none';
+        wrap.innerHTML = `<div style="text-align:center;color:#9a938a;padding:70px 0;">3D/AR появится позже</div>`;
+        $('#glb').style.display='none'; $('#usdz').style.display='none';
       }
     }
 
