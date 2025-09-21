@@ -102,5 +102,6 @@
     { "id": "meat-set1", "title": "Мясное ассорти Сет - 1 (4-5 персон)", "grams": "1.87 кг", "price": 6100, "currency": "сом", "category": "Мясное ассорти", "poster": "" },
     { "id": "meat-set2", "title": "Мясное ассорти Сет - 2 (6-7 персон)", "grams": "2.3 кг", "price": 8800, "currency": "сом", "category": "Мясное ассорти", "poster": "" },
 
-    { "id": "pepperoni", "title": "Пепперони", "grams": "30 см / 20 см", "price": 640, "currency": "сом", "category": "Пиццы и пиццеты", "poster": "" },
-    { "id": "chicken-pizza", "title": "Пицца с куриной грудкой", "grams": "30 см / 20 см", "price": 780, "currency": "сом", "category": "
+    { "id": "pepperoni", "title": "Пепперони", "grams": "30/20 см", "price": 640, "currency": "сом", "category": "Пиццы и пиццеты", "poster": "" },
+    { "id": "chicken-pizza", "title": "Пицца с куриной грудкой", "grams": "30/20 см", "price": 780, "currency": "сом", "category": "Пиццы и пиццеты", "poster": "" },
+    { "id": "four-cheese", "title": "Ч

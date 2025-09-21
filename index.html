@@ -12,10 +12,9 @@
   <style>
     /* —— Seven theme ———————————————————————————— */
     :root{
-      /* тёплая бежево-кофейная гамма */
-      --bg:#d9cfbf;            /* фон страницы (как на скринах) */
+      --bg:#d9cfbf;            /* фон страницы */
       --card:#f4efe7;          /* карточки/контейнеры */
-      --surface:#ffffff;       /* светлые внутренние блоки */
+      --surface:#ffffff;       /* внутренние блоки */
       --text:#1c1b1a;          /* основной текст */
       --muted:#6b665f;         /* вторичный текст */
       --border:#e3dacc;        /* светлая граница */
@@ -76,8 +75,10 @@
     .item:hover{transform:translateY(-1px)}
     .thumb{
       width:68px;height:68px;border-radius:14px;background:linear-gradient(135deg,#efe6db,#faf7f2);
-      display:grid;place-items:center;font-weight:900;font-size:20px;color:#463e34;border:1px solid var(--border)
+      display:grid;place-items:center;font-weight:900;font-size:20px;color:#463e34;border:1px solid var(--border); overflow:hidden
     }
+    .thumb img{width:100%;height:100%;object-fit:cover}
+
     .meta h3{margin:0 0 4px 0;font-size:17px}
     .meta .sub{font-size:13px;color:var(--muted)}
 
@@ -139,17 +140,26 @@
 
     const money = (n,c)=>{
       if(n==null) return '—';
-      const map={"сом":"KGS","сомы":"KGS","kgs":"KGS"};
+      const map={"сом":"KGS","сомы":"KGS","kgs":"KGS","som":"KGS"};
       const code = map[(c||'').toLowerCase()] || c || 'KGS';
       return new Intl.NumberFormat('ru-RU').format(n) + ' ' + code;
     };
 
     async function load(){
-      const r = await fetch('./data/menu.json?_=' + Date.now());
-      const raw = await r.json();
-      STATE.data = { cats: raw.categories || [], items: raw.items || [] };
-      bind();
-      renderHome();
+      try{
+        const r = await fetch('./data/menu.json?_=' + Date.now(), {cache:'no-store'});
+        if(!r.ok) throw new Error('menu.json status '+r.status);
+        const raw = await r.json();
+        STATE.data = { cats: raw.categories || [], items: raw.items || [] };
+        bind(); renderHome();
+      }catch(err){
+        const grid = document.getElementById('catsGrid');
+        if(grid){
+          grid.innerHTML = `<div class="tile"><div class="name">Не удалось загрузить data/menu.json</div>
+            <div class="meta">${String(err)}</div></div>`;
+        }
+        console.error(err);
+      }
     }
 
     function bind(){
@@ -165,8 +175,14 @@
       window.scrollTo({top:0,behavior:'smooth'});
     }
 
+    // Главная (плитка категорий)
     function renderHome(){
       const grid = $('#catsGrid'); grid.innerHTML = '';
+      if(!STATE.data || !STATE.data.cats.length){
+        grid.innerHTML = `<div class="tile"><div class="name">Файл menu.json пуст или повреждён</div>
+          <div class="meta">Добавьте "categories" и "items".</div></div>`;
+        return;
+      }
       const counts = Object.fromEntries(STATE.data.cats.map(c=>[c,0]));
       for(const it of STATE.data.items){ if(counts[it.category]!=null) counts[it.category]++; }
       STATE.data.cats.forEach(cat=>{
@@ -177,27 +193,34 @@
       });
     }
 
-    function thumbLetter(title){
-      const el=document.createElement('div'); el.className='thumb';
-      el.textContent = (title||'?').trim()[0]?.toUpperCase() || '?';
-      return el;
+    // Превью в списке (фото или буква)
+    function makeThumb(x){
+      const box = document.createElement('div'); box.className='thumb';
+      if(x.poster){
+        const img = new Image(); img.src = x.poster; img.alt = x.title; box.appendChild(img);
+      }else{
+        box.textContent = (x.title||'?').trim()[0]?.toUpperCase() || '?';
+      }
+      return box;
     }
 
+    // Список блюд
     function renderList(){
       const root=$('#list'); root.innerHTML='';
       const list = STATE.data.items.filter(x => (STATE.cat==='Все' || !STATE.cat) ? true : x.category===STATE.cat);
       list.forEach(x=>{
         const el=document.createElement('div'); el.className='item';
-        const t=thumbLetter(x.title);
+        const thumb = makeThumb(x);
         const m=document.createElement('div'); m.className='meta';
         m.innerHTML=`<h3>${x.title}</h3><div class="sub">${(x.note?x.note+' • ':'')}${(x.grams||'').trim()}${x.price!=null?' • '+money(x.price,x.currency):''}</div>`;
-        el.appendChild(t); el.appendChild(m);
+        el.appendChild(thumb); el.appendChild(m);
         el.onclick=()=>openItem(x);
         root.appendChild(el);
       });
       if(list[0]) openItem(list[0]);
     }
 
+    // Просмотр блюда (с 3D/AR, если есть model)
     function openItem(x){
       STATE.active=x;
       $('#vt').textContent=x.title;
@@ -205,7 +228,7 @@
       $('#vd').textContent = x.desc || x.note || '';
       const wrap=$('#viewer');
 
-      if(x.model?.glb && x.model?.usdz){
+      if(x.model && x.model.glb && x.model.usdz){
         wrap.innerHTML = `
           <model-viewer src="${x.model.glb}" ios-src="${x.model.usdz}" ar
             ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate
