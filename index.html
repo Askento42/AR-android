@@ -44,10 +44,6 @@
     .btn.ghost{background:transparent}
     .counter{color:#6b7280;font-weight:700;margin-left:auto}
 
-    .filters{display:flex;gap:8px;overflow-x:auto;padding:8px 0 16px}
-    .chip{padding:8px 14px;border:1px solid var(--border);background:var(--card);border-radius:999px;cursor:pointer;white-space:nowrap}
-    .chip.active{border-color:#1b1b1b;color:#1b1b1b}
-
     .layout{display:grid;grid-template-columns:380px 1fr;gap:20px}
     @media (max-width:980px){ .layout{grid-template-columns:1fr} }
     .list{display:grid;gap:12px}
@@ -80,7 +76,7 @@
       <div id="catsGrid" class="grid"></div>
     </section>
 
-    <!-- Экран со списком и просмотром -->
+    <!-- Экран со списком и просмотром (без вкладок категорий) -->
     <section id="menu">
       <div class="topbar">
         <button id="backBtn" class="btn">← К категориям</button>
@@ -88,8 +84,6 @@
         <div id="counter" class="counter">Загрузка…</div>
         <a class="btn" href="tel:+996555000777">Позвонить</a>
       </div>
-
-      <div id="filters" class="filters"></div>
 
       <div class="layout">
         <div class="list" id="list"></div>
@@ -113,24 +107,24 @@
 
   <script>
     const STATE = { data:null, cat:null, active:null };
-
-    function money(n, c){ if(n==null) return '—'; const map={ "сом":"KGS","kgs":"KGS","сомы":"KGS" }; const code=(map[(c||'').toLowerCase()]||c||"KGS"); return new Intl.NumberFormat('ru-RU').format(n)+' '+code; }
-    const $ = sel => document.querySelector(sel);
+    const $ = s => document.querySelector(s);
+    const money = (n,c)=> n==null?'—':(new Intl.NumberFormat('ru-RU').format(n)+' '+(({"сом":"KGS","kgs":"KGS","сомы":"KGS"})[(c||'').toLowerCase()]||c||'KGS'));
 
     async function load(){
       const url = './data/menu.json?_=' + Date.now();
       const r = await fetch(url);
       const raw = await r.json();
-      const cats = (raw.categories || []).slice();
+      const cats = raw.categories || [];
       const items = raw.items || [];
       STATE.data = { cats, items };
-      renderHome();
+
       bindCommon();
+      renderHome();
     }
 
     function bindCommon(){
-      $('#backBtn').onclick = () => { showHome(); };
-      $('#showAll').onclick = () => { STATE.cat = 'Все'; showMenu(); renderFilters(); renderList(); };
+      $('#backBtn').onclick = () => showHome();
+      $('#showAll').onclick = () => { STATE.cat = 'Все'; showMenu(); renderList(); };
     }
 
     function showHome(){
@@ -158,26 +152,14 @@
         el.innerHTML = `
           <div class="badge">${counts[cat]} поз.</div>
           <div class="name">${cat}</div>
-          <div class="meta">Откройте подборку блюд категории</div>
+          <div class="meta">Откройте подборку блюд</div>
         `;
-        el.onclick = () => { STATE.cat = cat; showMenu(); renderFilters(); renderList(); };
+        el.onclick = () => { STATE.cat = cat; showMenu(); renderList(); };
         grid.appendChild(el);
       });
     }
 
-    // ---------- Фильтры/список/просмотр (как было)
-    function renderFilters(){
-      const root = $('#filters'); root.innerHTML='';
-      const all = ['Все', ...STATE.data.cats];
-      all.forEach(cat=>{
-        const b=document.createElement('button');
-        b.className='chip'+((STATE.cat||'Все')===cat?' active':'');
-        b.textContent=cat;
-        b.onclick=()=>{ STATE.cat=cat; $('#where').textContent = cat==='Все'?'Все блюда':cat; renderList(); };
-        root.appendChild(b);
-      });
-    }
-
+    // ---------- Список блюд и просмотр
     function createThumb(title){
       const ph = document.createElement('div');
       ph.className = 'thumb-ph';
@@ -206,10 +188,13 @@
       $('#vp').textContent=x.price!=null?money(x.price,x.currency):'—';
       $('#vd').textContent=x.desc||'';
       const wrap=$('#viewer');
-      if(x.model&&x.model.glb&&x.model.usdz){
-        wrap.innerHTML = `<model-viewer src="${x.model.glb}" ios-src="${x.model.usdz}" ar ar-modes="webxr scene-viewer quick-look"
-          camera-controls auto-rotate shadow-intensity="1" exposure="1.1"
-          style="width:100%;height:460px;background:#f6f2ed;border-radius:12px"></model-viewer>`;
+
+      if(x.model && x.model.glb && x.model.usdz){
+        wrap.innerHTML = `
+          <model-viewer src="${x.model.glb}" ios-src="${x.model.usdz}" ar
+            ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate
+            shadow-intensity="1" exposure="1.1"
+            style="width:100%;height:460px;background:#f6f2ed;border-radius:12px"></model-viewer>`;
         const glb=$('#glb'); glb.style.display='inline-block'; glb.href=x.model.glb;
         const usdz=$('#usdz'); usdz.style.display='inline-block'; usdz.href=x.model.usdz;
       } else {
