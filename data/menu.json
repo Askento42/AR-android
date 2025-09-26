@@ -51,18 +51,55 @@
 
     { "id": "fried-shrimp", "title": "Креветки жареные с томатами", "grams": "190 г", "price": 860, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
     { "id": "veggie-cut", "title": "Овощная нарезка", "grams": "880 г", "price": 780, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
-    { "id": "antipasto", "title": "Антипасто", "grams": "750 г", "price": 1590, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
+    { "id": "antipasto", "title": "Антипасто", "grams": "750 г", "price": 1590, "currency": "som", "category": "Идеальное дополнение к аперитивам" },
     { "id": "fish-chips", "title": "Фиш и чипс", "grams": "350/80 г", "price": 1250, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
     { "id": "company-assorti", "title": "Ассорти на компанию", "grams": "1 кг", "price": 1590, "currency": "сом", "category": "Идеальное дополнение к аперитивам" },
 
-    { "id": "tajin-soup", "title": "Суп Таджин", "grams": "350 г", "price": 390, "currency": "сом", "category": "Супы",
+    {
+      "id": "tajin-soup",
+      "title": "Суп Таджин",
+      "grams": "350 г",
+      "price": 390,
+      "currency": "сом",
+      "category": "Супы",
       "model": { "glb": "./assets/models/soup.glb", "usdz": "./assets/models/soup1.usdz" }
     },
-    { "id": "pumpkin-soup", "title": "Тыквенный суп", "grams": "350 г", "price": 420, "currency": "сом", "category": "Супы" },
-    { "id": "okroshka", "title": "Окрошка с курицей", "grams": "450 г", "price": 390, "currency": "сом", "category": "Супы" },
-    { "id": "borsch", "title": "Борщ", "grams": "450 г", "price": 540, "currency": "сом", "category": "Супы" },
-    { "id": "tom-yam", "title": "Том-ям", "grams": "350 г", "price": 820, "currency": "сом", "category": "Супы",
-      "model": { "glb": "./assets/models/tomyumch.glb", "usdz": "./assets/models/tomyumch.usdz" }
+    {
+      "id": "pumpkin-soup",
+      "title": "Тыквенный суп",
+      "grams": "350 г",
+      "price": 420,
+      "currency": "сом",
+      "category": "Супы",
+      "poster": "https://static.tildacdn.one/tild3763-3435-4366-a238-376131363632/DSC06695.jpg"
+    },
+    {
+      "id": "okroshka",
+      "title": "Окрошка с курицей",
+      "grams": "450 г",
+      "price": 390,
+      "currency": "сом",
+      "category": "Супы",
+      "poster": "https://static.tildacdn.one/tild6134-3931-4662-b866-666638303239/DSC06809.jpg"
+    },
+    {
+      "id": "borsch",
+      "title": "Борщ",
+      "grams": "450 г",
+      "price": 540,
+      "currency": "сом",
+      "category": "Супы",
+      "poster": "https://static.tildacdn.one/tild3465-3365-4135-b738-666638613837/DSC00428.jpg"
+    },
+    {
+      "id": "tom-yam",
+      "title": "Том-ям",
+      "grams": "350 г",
+      "price": 820,
+      "currency": "сом",
+      "category": "Супы",
+      "model": { "glb": "./assets/models/tomyumch.glb", "usdz": "./assets/models/tomyumch.usdz" },
+      "poster": "https://static.tildacdn.one/tild6630-3936-4238-a531-303333633265/DSC00458.jpg"
     },
 
     { "id": "mini-cheburek", "title": "Мини чебуреки с цыплёнком", "grams": "220/40 г", "price": 480, "currency": "сом", "category": "В тесте" },
@@ -93,7 +130,13 @@
     { "id": "filet", "title": "Филе миньон с пюре", "grams": "150/100 г", "price": 1300, "currency": "сом", "category": "Аргентинский гриль" },
 
     { "id": "chicken-cutlet", "title": "Куриная отбивная", "grams": "390 г", "price": 640, "currency": "сом", "category": "Птица" },
-    { "id": "chicken-tomyum", "title": "Цыплёнок том-ям", "grams": "390 г", "price": 740, "currency": "сом", "category": "Птица",
+    {
+      "id": "chicken-tomyum",
+      "title": "Цыплёнок том-ям",
+      "grams": "390 г",
+      "price": 740,
+      "currency": "сом",
+      "category": "Птица",
       "model": { "glb": "./assets/models/tomyumch.glb", "usdz": "./assets/models/tomyumch.usdz" }
     },
     { "id": "grilled-chicken", "title": "Цыплёнок на гриле", "grams": "320/200 г", "price": 860, "currency": "сом", "category": "Птица" },
