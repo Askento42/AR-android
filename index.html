@@ -5,102 +5,177 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Seven — 3D-меню с AR</title>
   <meta name="description" content="Интерактивное меню ресторана Seven с 3D/AR моделями блюд." />
-
-  <!-- model-viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
   <style>
-    /* —— Seven theme ———————————————————————————— */
+    /* ================== ТЕМА SEVEN (бордовый фон + «стеклянные» карточки) ================== */
     :root{
-      --bg:#d9cfbf;            /* фон страницы */
-      --card:#f4efe7;          /* карточки/контейнеры */
-      --surface:#ffffff;       /* внутренние блоки */
-      --text:#1c1b1a;          /* основной текст */
-      --muted:#6b665f;         /* вторичный текст */
-      --border:#e3dacc;        /* светлая граница */
-      --shadow:0 12px 40px rgba(59,45,33,.12);
+      --bg-deep:#2a0004;          /* самый глубокий бордовый (нижняя часть фона) */
+      --bg-mid:#5c0a0f;           /* средний бордовый (верхняя часть фона) */
+      --glass:rgba(255,255,255,.07);
+      --glass-strong:rgba(255,255,255,.12);
+      --glass-border:rgba(255,255,255,.18);
+      --text:#fff7f0;             /* теплый почти белый */
+      --muted:#d9c9c4;            /* приглушенный текст */
+      --accent:#d4a372;           /* теплое «золото» (кнопки/акценты) */
+      --accent-2:#f0c08f;         /* светлее для градиента на кнопке */
+      --danger:#ff5e6a;
       --radius:18px;
       --radius-sm:14px;
-      --accent:#2a2a2a;        /* акцентные кнопки (чёрный) */
+      --shadow:0 8px 40px rgba(0,0,0,.3);
     }
+
     *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial}
-    img{display:block;max-width:100%}
+    html,body{height:100%}
+    html,body{
+      margin:0;
+      color:var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(180deg,var(--bg-mid),var(--bg-deep)) fixed;
+      /* фон-изображение */
+      background-image:
+        linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.2)),
+        url("./assets/posters/fon.jpg");
+      background-size:cover;
+      background-attachment:fixed;
+      background-position:center;
+    }
+
     a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
 
-    .container{max-width:1280px;margin:0 auto;padding:24px}
-    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-    .brand{display:flex;gap:12px;align-items:center}
-    .badge{width:42px;height:42px;border-radius:12px;background:#1a1a1a;color:#fff;display:grid;place-items:center;font-weight:800}
+    /* Полупрозрачные «стеклянные» контейнеры */
+    .glass{
+      background:var(--glass);
+      border:1px solid var(--glass-border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
 
-    .btn{padding:10px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer}
-    .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-    .btn.ghost{background:transparent}
+    .container{
+      max-width:1280px;
+      margin:0 auto;
+      padding:28px 20px 48px;
+    }
 
-    /* — главная: плитка категорий — */
-    #home{}
-    .hero{display:flex;justify-content:space-between;align-items:flex-end;margin:8px 0 20px}
-    .hero h1{margin:0;font-size:28px;letter-spacing:.5px}
-    .grid{display:grid;gap:16px;grid-template-columns:repeat(5,minmax(0,1fr))}
-    @media (max-width:1100px){ .grid{grid-template-columns:repeat(4,1fr)} }
-    @media (max-width:880px) { .grid{grid-template-columns:repeat(3,1fr)} }
+    header{
+      display:flex;align-items:center;gap:16px;justify-content:space-between;margin-bottom:18px
+    }
+    .brand{display:flex;align-items:center;gap:14px}
+    .brand-logo{
+      width:46px;height:46px;border-radius:50%;
+      background:var(--glass-strong);border:1px solid var(--glass-border);
+      display:grid;place-items:center;overflow:hidden;
+    }
+    .brand-logo img{width:100%;height:100%;object-fit:cover}
+    .brand-title{font-weight:900;letter-spacing:.4px}
+
+    .btn{
+      padding:11px 16px;border-radius:12px;border:1px solid var(--glass-border);
+      background:var(--glass-strong);color:var(--text);cursor:pointer;
+      transition:transform .12s ease, background .12s ease, border-color .12s ease
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.14)}
+    .btn.primary{
+      border:none;
+      background:linear-gradient(180deg,var(--accent-2),var(--accent));
+      color:#2a120a;font-weight:800;
+      text-shadow:0 1px 0 rgba(255,255,255,.35);
+    }
+    .btn.ghost{background:transparent;border-color:var(--glass-border)}
+    .btn.small{padding:8px 12px;border-radius:10px}
+
+    /* Главная: плитка категорий */
+    #home .hero{display:flex;align-items:baseline;gap:18px;margin:6px 0 18px}
+    #home .title{font-size:28px;font-weight:900;letter-spacing:.4px;margin:0}
+    .subtle{color:var(--muted);font-size:14px}
+    .grid{
+      display:grid;gap:16px;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+    }
+    @media (max-width:1120px){ .grid{grid-template-columns:repeat(4,1fr)} }
+    @media (max-width:900px) { .grid{grid-template-columns:repeat(3,1fr)} }
     @media (max-width:680px) { .grid{grid-template-columns:repeat(2,1fr)} }
+
     .tile{
-      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-      padding:16px; min-height:120px; cursor:pointer; display:flex; flex-direction:column; gap:10px;
-      transition:.15s ease; box-shadow:var(--shadow)
+      padding:16px;min-height:110px;display:flex;flex-direction:column;gap:10px;
+      cursor:pointer;transition:transform .12s ease, background .12s ease, border-color .12s ease
     }
     .tile:hover{transform:translateY(-2px)}
-    .tile .name{font-weight:800; letter-spacing:.3px}
-    .tile .meta{color:var(--muted); font-size:13px}
-    .chip{align-self:flex-start; border-radius:999px; padding:6px 10px; font-size:12px;
-      border:1px dashed #cbbda9; background:#efe6d9; color:#2b2117}
+    .chip{
+      align-self:flex-start;font-size:12px;padding:6px 10px;border-radius:999px;
+      color:#2a120a;background:linear-gradient(180deg,var(--accent-2),var(--accent));
+      font-weight:800
+    }
+    .tile .name{font-weight:900;letter-spacing:.35px}
+    .tile .meta{color:var(--muted);font-size:13px}
 
-    /* — экран категории — */
+    /* Экран категории */
     #menu{display:none}
     .topbar{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-    .where{font-weight:900;letter-spacing:.4px}
+    .where{font-weight:900;letter-spacing:.35px}
     .counter{margin-left:auto;color:var(--muted);font-weight:600}
 
-    .layout{display:grid;grid-template-columns:420px 1fr;gap:22px}
+    .layout{
+      display:grid;gap:22px;
+      grid-template-columns:420px 1fr;
+    }
     @media (max-width:980px){ .layout{grid-template-columns:1fr} }
 
     .list{display:grid;gap:12px}
     .item{
-      display:grid;grid-template-columns:68px 1fr;gap:12px;align-items:center;
-      padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;
-      transition:.15s ease
+      display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;
+      padding:12px;border-radius:var(--radius-sm);border:1px solid var(--glass-border);
+      background:var(--glass);cursor:pointer;transition:transform .12s ease;
     }
     .item:hover{transform:translateY(-1px)}
     .thumb{
-      width:68px;height:68px;border-radius:14px;background:linear-gradient(135deg,#efe6db,#faf7f2);
-      display:grid;place-items:center;font-weight:900;font-size:20px;color:#463e34;border:1px solid var(--border); overflow:hidden
+      width:64px;height:64px;border-radius:14px;display:grid;place-items:center;
+      font-weight:900;font-size:20px;color:#fff3e6;
+      background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+      border:1px solid var(--glass-border)
     }
-    .thumb img{width:100%;height:100%;object-fit:cover}
-
     .meta h3{margin:0 0 4px 0;font-size:17px}
     .meta .sub{font-size:13px;color:var(--muted)}
 
-    .pad{padding:14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
-    .viewer{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);padding:10px;min-height:380px;display:grid;align-items:center}
+    .pad{padding:14px}
+    .viewer{
+      border:1px solid var(--glass-border);border-radius:var(--radius);
+      background:var(--glass);padding:10px;min-height:380px;display:grid;align-items:center
+    }
     .titlebar{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px}
     .price{font-weight:900}
     .controls{display:flex;gap:10px;margin-top:12px}
+
+    /* Небольшой ореол/виниетирование, чтобы контрастировать текст */
+    .vignette:before{
+      content:"";position:fixed;inset:0;pointer-events:none;
+      background:radial-gradient(60% 60% at 50% 20%, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 100%);
+      z-index:-1;
+    }
   </style>
 </head>
-<body>
+<body class="vignette">
   <div class="container">
     <header>
-      <div class="brand"><div class="badge">7</div><div style="font-weight:900">Seven — 3D-меню с AR</div></div>
-      <a class="btn" href="tel:+996555000777">Забронировать</a>
+      <div class="brand">
+        <div class="brand-logo glass">
+          <img src="./assets/posters/seven_logo.png" alt="Seven logo">
+        </div>
+        <div class="brand-title">Seven — 3D-меню с AR</div>
+      </div>
+      <a class="btn primary" href="tel:+996555000777">Забронировать</a>
     </header>
 
     <!-- Главная: категории -->
     <section id="home">
       <div class="hero">
-        <h1>Меню Seven</h1>
-        <button id="showAll" class="btn ghost">Показать все блюда</button>
+        <h1 class="title">Меню Seven</h1>
+        <span class="subtle" id="homeStats"></span>
+        <span style="flex:1"></span>
+        <button id="showAll" class="btn ghost small">Показать все блюда</button>
       </div>
       <div id="catsGrid" class="grid"></div>
     </section>
@@ -108,26 +183,27 @@
     <!-- Экран категории -->
     <section id="menu">
       <div class="topbar">
-        <button id="backBtn" class="btn">← К категориям</button>
+        <button id="backBtn" class="btn small">← К категориям</button>
         <div id="where" class="where"></div>
         <div id="counter" class="counter"></div>
-        <a class="btn primary" href="tel:+996555000777">Позвонить</a>
+        <a class="btn primary small" href="tel:+996555000777">Позвонить</a>
       </div>
 
       <div class="layout">
         <div class="list" id="list"></div>
-        <div class="pad">
-          <div class="viewer" id="viewer">
-            <div style="text-align:center;color:#9a938a">Выберите блюдо слева</div>
+
+        <div class="pad glass">
+          <div class="viewer">
+            <div style="text-align:center;color:var(--muted)">Выберите блюдо слева</div>
           </div>
           <div class="titlebar">
             <h2 id="vt">—</h2>
             <div class="price" id="vp">—</div>
           </div>
-          <div id="vd" style="color:#7b746c;margin-top:6px">—</div>
+          <div id="vd" class="subtle" style="margin-top:6px">—</div>
           <div class="controls">
-            <a id="glb" class="btn" style="display:none" target="_blank">GLB</a>
-            <a id="usdz" class="btn" style="display:none" target="_blank">USDZ</a>
+            <a id="glb" class="btn small" style="display:none" target="_blank">GLB</a>
+            <a id="usdz" class="btn small" style="display:none" target="_blank">USDZ</a>
           </div>
         </div>
       </div>
@@ -140,25 +216,24 @@
 
     const money = (n,c)=>{
       if(n==null) return '—';
-      const map={"сом":"KGS","сомы":"KGS","kgs":"KGS","som":"KGS"};
+      const map={"сом":"KGS","сомы":"KGS","kgs":"KGS"};
       const code = map[(c||'').toLowerCase()] || c || 'KGS';
       return new Intl.NumberFormat('ru-RU').format(n) + ' ' + code;
     };
 
     async function load(){
       try{
-        const r = await fetch('./data/menu.json?_=' + Date.now(), {cache:'no-store'});
-        if(!r.ok) throw new Error('menu.json status '+r.status);
+        const r = await fetch('./data/menu.json?_=' + Date.now());
         const raw = await r.json();
         STATE.data = { cats: raw.categories || [], items: raw.items || [] };
         bind(); renderHome();
-      }catch(err){
-        const grid = document.getElementById('catsGrid');
-        if(grid){
-          grid.innerHTML = `<div class="tile"><div class="name">Не удалось загрузить data/menu.json</div>
-            <div class="meta">${String(err)}</div></div>`;
-        }
-        console.error(err);
+      }catch(e){
+        const home = $('#home');
+        home.innerHTML = `
+          <div class="glass" style="padding:18px">
+            <div style="font-weight:900;margin-bottom:6px">Не удалось загрузить data/menu.json</div>
+            <div class="subtle" style="white-space:pre-wrap">${e}</div>
+          </div>`;
       }
     }
 
@@ -167,77 +242,79 @@
       $('#showAll').onclick = ()=>{ STATE.cat='Все'; showMenu(); renderList(); };
     }
 
-    function showHome(){ $('#menu').style.display='none'; $('#home').style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
-    function showMenu(){
-      $('#home').style.display='none'; $('#menu').style.display='block';
-      $('#where').textContent = STATE.cat==='Все' ? 'Все блюда' : STATE.cat || 'Меню';
-      $('#counter').textContent = `Категории: ${STATE.data.cats.length} • Блюда: ${STATE.data.items.length}`;
+    function showHome(){
+      $('#menu').style.display='none';
+      $('#home').style.display='block';
       window.scrollTo({top:0,behavior:'smooth'});
     }
 
-    // Главная (плитка категорий)
+    function showMenu(){
+      $('#home').style.display='none';
+      $('#menu').style.display='block';
+      $('#where').textContent = STATE.cat==='Все' ? 'Все блюда' : STATE.cat || 'Меню';
+      $('#counter').textContent = `Категорий: ${STATE.data.cats.length} • Блюд: ${STATE.data.items.length}`;
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
     function renderHome(){
       const grid = $('#catsGrid'); grid.innerHTML = '';
-      if(!STATE.data || !STATE.data.cats.length){
-        grid.innerHTML = `<div class="tile"><div class="name">Файл menu.json пуст или повреждён</div>
-          <div class="meta">Добавьте "categories" и "items".</div></div>`;
-        return;
-      }
       const counts = Object.fromEntries(STATE.data.cats.map(c=>[c,0]));
       for(const it of STATE.data.items){ if(counts[it.category]!=null) counts[it.category]++; }
+      $('#homeStats').textContent = `Категорий: ${STATE.data.cats.length} • Блюд: ${STATE.data.items.length}`;
+
       STATE.data.cats.forEach(cat=>{
-        const el=document.createElement('div'); el.className='tile';
-        el.innerHTML = `<div class="chip">${counts[cat]} поз.</div><div class="name">${cat}</div><div class="meta">Открыть раздел</div>`;
+        const el=document.createElement('div'); el.className='tile glass';
+        el.innerHTML = `<div class="chip">${counts[cat]||0} поз.</div>
+                        <div class="name">${cat}</div>
+                        <div class="meta">Открыть раздел</div>`;
         el.onclick=()=>{ STATE.cat=cat; showMenu(); renderList(); };
         grid.appendChild(el);
       });
     }
 
-    // Превью в списке (фото или буква)
-    function makeThumb(x){
-      const box = document.createElement('div'); box.className='thumb';
-      if(x.poster){
-        const img = new Image(); img.src = x.poster; img.alt = x.title; box.appendChild(img);
-      }else{
-        box.textContent = (x.title||'?').trim()[0]?.toUpperCase() || '?';
-      }
-      return box;
+    function thumbLetter(title){
+      const el=document.createElement('div'); el.className='thumb';
+      el.textContent = (title||'?').trim()[0]?.toUpperCase() || '?';
+      return el;
     }
 
-    // Список блюд
     function renderList(){
       const root=$('#list'); root.innerHTML='';
       const list = STATE.data.items.filter(x => (STATE.cat==='Все' || !STATE.cat) ? true : x.category===STATE.cat);
       list.forEach(x=>{
-        const el=document.createElement('div'); el.className='item';
-        const thumb = makeThumb(x);
+        const el=document.createElement('div'); el.className='item glass';
+        const t=thumbLetter(x.title);
         const m=document.createElement('div'); m.className='meta';
-        m.innerHTML=`<h3>${x.title}</h3><div class="sub">${(x.note?x.note+' • ':'')}${(x.grams||'').trim()}${x.price!=null?' • '+money(x.price,x.currency):''}</div>`;
-        el.appendChild(thumb); el.appendChild(m);
+        const grams = (x.grams||'').toString().trim();
+        const note  = (x.note||'').toString().trim();
+        const subParts = [note || null, grams || null, (x.price!=null? money(x.price,x.currency):null)].filter(Boolean);
+        m.innerHTML=`<h3>${x.title}</h3><div class="sub">${subParts.join(' • ')}</div>`;
+        el.appendChild(t); el.appendChild(m);
         el.onclick=()=>openItem(x);
         root.appendChild(el);
       });
       if(list[0]) openItem(list[0]);
     }
 
-    // Просмотр блюда (с 3D/AR, если есть model)
     function openItem(x){
       STATE.active=x;
       $('#vt').textContent=x.title;
       $('#vp').textContent=x.price!=null?money(x.price,x.currency):'—';
       $('#vd').textContent = x.desc || x.note || '';
-      const wrap=$('#viewer');
+      const wrap=document.querySelector('.viewer');
 
-      if(x.model && x.model.glb && x.model.usdz){
+      if(x.model?.glb && x.model?.usdz){
         wrap.innerHTML = `
           <model-viewer src="${x.model.glb}" ios-src="${x.model.usdz}" ar
             ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate
             shadow-intensity="1" exposure="1.08"
-            style="width:100%;height:480px;background:var(--card);border-radius:18px"></model-viewer>`;
+            style="width:100%;height:480px;border-radius:16px"></model-viewer>`;
         $('#glb').style.display='inline-block'; $('#glb').href=x.model.glb;
         $('#usdz').style.display='inline-block'; $('#usdz').href=x.model.usdz;
       } else {
-        wrap.innerHTML = `<div style="text-align:center;color:#9a938a;padding:70px 0;">3D/AR появится позже</div>`;
+        wrap.innerHTML = `<div style="text-align:center;color:var(--muted);padding:70px 0;">
+          3D/AR появится позже
+        </div>`;
         $('#glb').style.display='none'; $('#usdz').style.display='none';
       }
     }
