@@ -1,268 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Seven — 3D-меню</title>
-  <meta name="description" content="Интерактивное меню ресторана Seven с 3D/AR моделями блюд." />
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seven Menu</title>
   <style>
-    :root{
-      /* теплая светлая тема в духе мокапа */
-      --bg:#faf3ec;
-      --ink:#2b201b;
-      --muted:#7e716a;
-      --pill:#977f62;         /* цвет «пилюль» */
-      --pill-text:#fbf4ee;
-      --outline:#cdbdaa;
-      --accent:#d4a372;
-      --radius:22px;
-      --shadow:0 10px 25px rgba(0,0,0,.08);
-    }
-
-    *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial;
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    }
-
-    /* — каркас — */
-    .wrap{max-width:980px;margin:0 auto;padding:28px 18px 60px}
-    header{
-      display:grid;grid-template-columns:1fr auto 1fr;align-items:center
-    }
-    .top-btn{
-      justify-self:start;
-      padding:9px 14px;border-radius:999px;border:1px solid var(--outline);
-      background:#fff; box-shadow:var(--shadow); color:var(--ink);
-      font-size:13px; cursor:pointer;
-    }
-    .lang{justify-self:end}
-
-    /* логотип + заголовок */
-    .logo{
-      width:78px;height:78px;border-radius:50%;margin:28px auto 10px;
-      background:#fff;border:1px solid var(--outline);display:grid;place-items:center;
-      box-shadow:var(--shadow);overflow:hidden;
-    }
-    .logo img{width:100%;height:100%;object-fit:cover}
-    h1{font-size:18px;text-align:center;margin:0 0 18px 0;color:var(--muted);letter-spacing:.3px}
-
-    /* список групп */
-    .group-list{max-width:640px;margin:0 auto}
-    .pill{
-      background:var(--pill);color:var(--pill-text);
-      border-radius:var(--radius);padding:16px 18px;margin:10px 0;
-      text-align:center;font-weight:700; letter-spacing:.2px; cursor:pointer;
-      box-shadow:var(--shadow);
-      transition:transform .12s ease, filter .12s ease;
-    }
-    .pill:hover{transform:translateY(-1px); filter:brightness(1.02)}
-    .pill:active{transform:translateY(0)}
-
-    /* разделитель со стрелкой */
-    .divider{display:flex;align-items:center;gap:12px;margin:22px auto;max-width:640px}
-    .divider .line{flex:1;height:1px;background:var(--outline)}
-    .chev{width:18px;height:18px;border:1px solid var(--outline);border-radius:50%;
-      display:grid;place-items:center;font-size:12px;color:var(--muted);background:#fff}
-
-    /* соцсети */
-    h2{font-size:14px;letter-spacing:.25px;text-align:center;margin:0 0 14px;color:var(--muted)}
-    .social{max-width:640px;margin:0 auto}
-
-    /* экран категории (второй экран) */
-    #menu{display:none}
-    .topbar{display:flex;align-items:center;gap:12px;margin:8px 0 14px}
-    .back{padding:9px 14px;border-radius:999px;border:1px solid var(--outline);background:#fff;cursor:pointer}
-    .where{font-weight:800}
-    .counter{margin-left:auto;color:var(--muted)}
-    .layout{display:grid;gap:18px;grid-template-columns:420px 1fr}
-    @media (max-width:920px){ .layout{grid-template-columns:1fr} }
-    .card{background:#fff;border:1px solid var(--outline);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-
-    .list{display:grid;gap:10px}
-    .item{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;
-      padding:10px;border:1px solid var(--outline);border-radius:14px;background:#fff;cursor:pointer}
-    .thumb{width:56px;height:56px;border-radius:12px;background:#f4ece5;display:grid;place-items:center;font-weight:900}
-    .meta h3{margin:0 0 3px 0;font-size:16px}
-    .meta .sub{color:var(--muted);font-size:13px}
-
-    .viewer{min-height:360px;border:1px dashed var(--outline);border-radius:14px;display:grid;place-items:center;background:#fff}
-    .titlebar{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
-    .price{font-weight:900}
-    .controls{display:flex;gap:10px;margin-top:10px}
-    .btn{padding:8px 12px;border:1px solid var(--outline);border-radius:10px;background:#fff;cursor:pointer}
-    .btn.primary{background:linear-gradient(180deg,#f5d6b2,#e4b681);border:none;color:#2b1a11;font-weight:800}
-
-    /* фоновая текстура с логотипом (очень деликатно): можно выключить если не нужно */
-    body:before{
-      content:""; position:fixed; inset:0; pointer-events:none; opacity:.07;
-      background-image:url("./assets/posters/fon.jpg");
-      background-size:cover; background-position:center; mix-blend-mode:multiply;
-    }
+    body { margin:0; font-family: Arial, sans-serif; background:#f9f6f2; text-align:center; }
+    .logo { margin:30px 0; }
+    .logo img { width:80px; border-radius:50%; }
+    h1 { font-size:28px; margin-bottom:20px; }
+    .menu-list { display:flex; flex-direction:column; align-items:center; gap:15px; padding:20px; }
+    .menu-link { display:block; width:300px; padding:15px; background:#988162; color:#fff; text-decoration:none;
+                 border-radius:25px; font-size:18px; font-weight:500; transition:background .2s; }
+    .menu-link:hover { background:#7a563a; }
   </style>
 </head>
 <body>
-  <div class="wrap" id="app">
 
-    <header>
-      <button class="top-btn" id="homeBtn">Главная страница</button>
-      <span></span>
-      <button class="top-btn lang" id="langBtn">ENG</button>
-    </header>
-
-    <!-- ГЛАВНАЯ -->
-    <section id="home">
-      <div class="logo"><img src="./assets/posters/seven_logo.png" alt="Seven"></div>
-      <h1>Menu</h1>
-
-      <div class="group-list" id="groupList">
-        <!-- заполняется из JS -->
-      </div>
-
-      <div class="divider">
-        <div class="line"></div>
-        <div class="chev">⌄</div>
-        <div class="line"></div>
-      </div>
-
-      <h2>НАШИ СОЦСЕТИ</h2>
-      <div class="social">
-        <a class="pill" id="instaLink" href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
-      </div>
-    </section>
-
-    <!-- КАТЕГОРИИ / БЛЮДА -->
-    <section id="menu">
-      <div class="topbar">
-        <button class="back" id="backBtn">← К категориям</button>
-        <div class="where" id="where"></div>
-        <div class="counter" id="counter"></div>
-        <a class="btn primary" href="tel:+996555000777">Позвонить</a>
-      </div>
-
-      <div class="layout">
-        <div class="card">
-          <div class="list" id="list"></div>
-        </div>
-
-        <div class="card">
-          <div class="viewer" id="viewer"><span style="color:var(--muted)">Выберите блюдо слева</span></div>
-          <div class="titlebar">
-            <h3 id="vt">—</h3>
-            <div class="price" id="vp">—</div>
-          </div>
-          <div id="vd" style="color:var(--muted)">—</div>
-          <div class="controls">
-            <a id="glb" class="btn" style="display:none" target="_blank">GLB</a>
-            <a id="usdz" class="btn" style="display:none" target="_blank">USDZ</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
+  <div class="logo">
+    <img src="./assets/logo.png" alt="Seven Logo">
   </div>
 
-  <script>
-    const $ = s => document.querySelector(s);
-    const STATE = { data:null, cat:null, active:null };
+  <h1>Menu</h1>
 
-    // Группы как на скрине (одна кнопка может включать несколько категорий):
-    const GROUPS = [
-      { label: "Салаты – Роллы", cats: ["Салаты","Роллы"] },
-      { label: "Закуски", cats: ["Закуски"] },
-      { label: "Супы", cats: ["Супы"] },
-      { label: "В тесте – Паста", cats: ["В тесте","Паста"] },
-      { label: "Основные блюда", cats: ["Основные блюда"] },
-      { label: "Мясное ассорти", cats: ["Мясное ассорти"] },
-      { label: "Пицца", cats: ["Пицца"] },
-      { label: "Десерты", cats: ["Десерты"] },
-      { label: "Гарниры – Хлеб", cats: ["Гарниры","Хлеб"] },
-    ];
+  <div class="menu-list">
+    <a href="salaty.html" class="menu-link">Салаты – Роллы</a>
+    <a href="zakuski.html" class="menu-link">Закуски</a>
+    <a href="supy.html" class="menu-link">Супы</a>
+    <a href="testo-pasta.html" class="menu-link">В тесте – Паста</a>
+    <a href="osnovnye.html" class="menu-link">Основные блюда</a>
+    <a href="assorti.html" class="menu-link">Мясное ассорти</a>
+    <a href="pizza.html" class="menu-link">Пицца</a>
+    <a href="deserty.html" class="menu-link">Десерты</a>
+    <a href="garniry.html" class="menu-link">Гарниры – Хлеб</a>
+    <a href="ptica.html" class="menu-link">Птица</a> <!-- ✅ Новая ссылка -->
+  </div>
 
-    const money = (n,c)=>{
-      if(n==null) return '—';
-      const map={"сом":"KGS","сомы":"KGS","kgs":"KGS"};
-      const code = map[(c||'').toLowerCase()] || c || 'KGS';
-      return new Intl.NumberFormat('ru-RU').format(n) + ' ' + code;
-    };
-
-    async function load(){
-      const r = await fetch('./data/menu.json?_=' + Date.now());
-      const raw = await r.json();
-      STATE.data = { cats: raw.categories || [], items: raw.items || [], brand: raw.brand || null };
-      if(STATE.data.brand?.instagram) $('#instaLink').href = STATE.data.brand.instagram;
-      renderGroups();
-      bind();
-    }
-
-    function bind(){
-      $('#homeBtn').onclick = showHome;
-      $('#backBtn').onclick = showHome;
-      $('#langBtn').onclick = ()=>alert("Переключение языка можно подключить позже 🙂");
-    }
-
-    function showHome(){
-      $('#menu').style.display='none';
-      $('#home').style.display='block';
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-    function showMenu(groupLabel){
-      $('#home').style.display='none';
-      $('#menu').style.display='block';
-      $('#where').textContent = groupLabel;
-      const items = STATE.data.items.filter(x => GROUPS.find(g=>g.label===groupLabel).cats.includes(x.category));
-      $('#counter').textContent = `Показано: ${items.length}`;
-      renderList(items);
-    }
-
-    function renderGroups(){
-      const root = $('#groupList'); root.innerHTML='';
-      GROUPS.forEach(g=>{
-        const btn=document.createElement('div');
-        btn.className='pill'; btn.textContent=g.label;
-        btn.onclick=()=>showMenu(g.label);
-        root.appendChild(btn);
-      });
-    }
-
-    function renderList(items){
-      const root=$('#list'); root.innerHTML='';
-      items.forEach(x=>{
-        const el=document.createElement('div'); el.className='item';
-        const t=document.createElement('div'); t.className='thumb'; t.textContent=(x.title||'?')[0]?.toUpperCase()||'?';
-        const m=document.createElement('div'); m.className='meta';
-        const sub=[x.grams?.trim(), x.price!=null?money(x.price,x.currency):null].filter(Boolean).join(' • ');
-        m.innerHTML=`<h3>${x.title}</h3><div class="sub">${sub}</div>`;
-        el.appendChild(t); el.appendChild(m);
-        el.onclick=()=>openItem(x);
-        root.appendChild(el);
-      });
-      if(items[0]) openItem(items[0]);
-    }
-
-    function openItem(x){
-      STATE.active=x;
-      $('#vt').textContent=x.title || '—';
-      $('#vp').textContent=x.price!=null?money(x.price,x.currency):'—';
-      $('#vd').textContent=x.desc || x.note || '';
-      const wrap=$('#viewer');
-      if(x.model?.glb && x.model?.usdz){
-        wrap.innerHTML = `
-          <model-viewer src="${x.model.glb}" ios-src="${x.model.usdz}" ar
-            ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate
-            shadow-intensity="1" exposure="1.05"
-            style="width:100%;height:420px;border-radius:14px;background:#fff"></model-viewer>`;
-        $('#glb').style.display='inline-block'; $('#glb').href=x.model.glb;
-        $('#usdz').style.display='inline-block'; $('#usdz').href=x.model.usdz;
-      } else {
-        wrap.innerHTML = `<span style="color:var(--muted)">3D/AR для этого блюда появится позже</span>`;
-        $('#glb').style.display='none'; $('#usdz').style.display='none';
-      }
-    }
-
-    load();
-  </script>
 </body>
 </html>
-
