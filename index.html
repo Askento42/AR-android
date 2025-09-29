@@ -8,69 +8,34 @@
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
     :root{
-      /* теплая светлая тема в духе мокапа */
-      --bg:#faf3ec;
-      --ink:#2b201b;
-      --muted:#7e716a;
-      --pill:#977f62;         /* цвет «пилюль» */
-      --pill-text:#fbf4ee;
-      --outline:#cdbdaa;
-      --accent:#d4a372;
-      --radius:22px;
-      --shadow:0 10px 25px rgba(0,0,0,.08);
+      --bg:#faf3ec; --ink:#2b201b; --muted:#7e716a; --pill:#977f62; --pill-text:#fbf4ee;
+      --outline:#cdbdaa; --accent:#d4a372; --radius:22px; --shadow:0 10px 25px rgba(0,0,0,.08);
     }
-
     *{box-sizing:border-box}
     html,body{margin:0;background:var(--bg);color:var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial;
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    }
-
-    /* — каркас — */
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
     .wrap{max-width:980px;margin:0 auto;padding:28px 18px 60px}
-    header{
-      display:grid;grid-template-columns:1fr auto 1fr;align-items:center
-    }
-    .top-btn{
-      justify-self:start;
-      padding:9px 14px;border-radius:999px;border:1px solid var(--outline);
-      background:#fff; box-shadow:var(--shadow); color:var(--ink);
-      font-size:13px; cursor:pointer;
-    }
+    header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+    .top-btn{justify-self:start;padding:9px 14px;border-radius:999px;border:1px solid var(--outline);
+      background:#fff; box-shadow:var(--shadow); color:var(--ink); font-size:13px; cursor:pointer;}
     .lang{justify-self:end}
-
-    /* логотип + заголовок */
-    .logo{
-      width:78px;height:78px;border-radius:50%;margin:28px auto 10px;
-      background:#fff;border:1px solid var(--outline);display:grid;place-items:center;
-      box-shadow:var(--shadow);overflow:hidden;
-    }
+    .logo{width:78px;height:78px;border-radius:50%;margin:28px auto 10px;background:#fff;border:1px solid var(--outline);
+      display:grid;place-items:center;box-shadow:var(--shadow);overflow:hidden;}
     .logo img{width:100%;height:100%;object-fit:cover}
     h1{font-size:18px;text-align:center;margin:0 0 18px 0;color:var(--muted);letter-spacing:.3px}
-
-    /* список групп */
     .group-list{max-width:640px;margin:0 auto}
-    .pill{
-      background:var(--pill);color:var(--pill-text);
-      border-radius:var(--radius);padding:16px 18px;margin:10px 0;
-      text-align:center;font-weight:700; letter-spacing:.2px; cursor:pointer;
-      box-shadow:var(--shadow);
-      transition:transform .12s ease, filter .12s ease;
-    }
+    .pill{background:var(--pill);color:var(--pill-text);border-radius:var(--radius);padding:16px 18px;margin:10px 0;
+      text-align:center;font-weight:700; letter-spacing:.2px; cursor:pointer; box-shadow:var(--shadow);
+      transition:transform .12s ease, filter .12s ease;}
     .pill:hover{transform:translateY(-1px); filter:brightness(1.02)}
     .pill:active{transform:translateY(0)}
-
-    /* разделитель со стрелкой */
     .divider{display:flex;align-items:center;gap:12px;margin:22px auto;max-width:640px}
     .divider .line{flex:1;height:1px;background:var(--outline)}
     .chev{width:18px;height:18px;border:1px solid var(--outline);border-radius:50%;
       display:grid;place-items:center;font-size:12px;color:var(--muted);background:#fff}
-
-    /* соцсети */
     h2{font-size:14px;letter-spacing:.25px;text-align:center;margin:0 0 14px;color:var(--muted)}
     .social{max-width:640px;margin:0 auto}
-
-    /* экран категории (второй экран) */
     #menu{display:none}
     .topbar{display:flex;align-items:center;gap:12px;margin:8px 0 14px}
     .back{padding:9px 14px;border-radius:999px;border:1px solid var(--outline);background:#fff;cursor:pointer}
@@ -79,32 +44,25 @@
     .layout{display:grid;gap:18px;grid-template-columns:420px 1fr}
     @media (max-width:920px){ .layout{grid-template-columns:1fr} }
     .card{background:#fff;border:1px solid var(--outline);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-
     .list{display:grid;gap:10px}
     .item{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;
       padding:10px;border:1px solid var(--outline);border-radius:14px;background:#fff;cursor:pointer}
-    .thumb{width:56px;height:56px;border-radius:12px;background:#f4ece5;display:grid;place-items:center;font-weight:900}
+    .thumb{width:56px;height:56px;border-radius:12px;background:#f4ece5;display:grid;place-items:center;font-weight:900;overflow:hidden}
+    .thumb img{width:100%;height:100%;object-fit:cover}
     .meta h3{margin:0 0 3px 0;font-size:16px}
     .meta .sub{color:var(--muted);font-size:13px}
-
     .viewer{min-height:360px;border:1px dashed var(--outline);border-radius:14px;display:grid;place-items:center;background:#fff}
     .titlebar{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
     .price{font-weight:900}
     .controls{display:flex;gap:10px;margin-top:10px}
     .btn{padding:8px 12px;border:1px solid var(--outline);border-radius:10px;background:#fff;cursor:pointer}
     .btn.primary{background:linear-gradient(180deg,#f5d6b2,#e4b681);border:none;color:#2b1a11;font-weight:800}
-
-    /* фоновая текстура с логотипом (очень деликатно): можно выключить если не нужно */
-    body:before{
-      content:""; position:fixed; inset:0; pointer-events:none; opacity:.07;
-      background-image:url("./assets/posters/fon.jpg");
-      background-size:cover; background-position:center; mix-blend-mode:multiply;
-    }
+    body:before{content:""; position:fixed; inset:0; pointer-events:none; opacity:.07;
+      background-image:url("./assets/posters/fon.jpg"); background-size:cover; background-position:center; mix-blend-mode:multiply;}
   </style>
 </head>
 <body>
   <div class="wrap" id="app">
-
     <header>
       <button class="top-btn" id="homeBtn">Главная страница</button>
       <span></span>
@@ -115,17 +73,8 @@
     <section id="home">
       <div class="logo"><img src="./assets/posters/seven_logo.png" alt="Seven"></div>
       <h1>Menu</h1>
-
-      <div class="group-list" id="groupList">
-        <!-- заполняется из JS -->
-      </div>
-
-      <div class="divider">
-        <div class="line"></div>
-        <div class="chev">⌄</div>
-        <div class="line"></div>
-      </div>
-
+      <div class="group-list" id="groupList"></div>
+      <div class="divider"><div class="line"></div><div class="chev">⌄</div><div class="line"></div></div>
       <h2>НАШИ СОЦСЕТИ</h2>
       <div class="social">
         <a class="pill" id="instaLink" href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
@@ -138,14 +87,11 @@
         <button class="back" id="backBtn">← К категориям</button>
         <div class="where" id="where"></div>
         <div class="counter" id="counter"></div>
-        <a class="btn primary" href="tel:+996555000777">Позвонить</a>
+        <a class="btn primary" id="callBtn" href="tel:+996555000777">Позвонить</a>
       </div>
 
       <div class="layout">
-        <div class="card">
-          <div class="list" id="list"></div>
-        </div>
-
+        <div class="card"><div class="list" id="list"></div></div>
         <div class="card">
           <div class="viewer" id="viewer"><span style="color:var(--muted)">Выберите блюдо слева</span></div>
           <div class="titlebar">
@@ -160,40 +106,42 @@
         </div>
       </div>
     </section>
-
   </div>
 
   <script>
     const $ = s => document.querySelector(s);
     const STATE = { data:null, cat:null, active:null };
 
-    // Группы как на скрине (одна кнопка может включать несколько категорий):
+    // Группы на главной (соответствие с категориями menu.json)
     const GROUPS = [
       { label: "Салаты – Роллы", cats: ["Салаты","Роллы"] },
       { label: "Закуски", cats: ["Закуски"] },
       { label: "Супы", cats: ["Супы"] },
       { label: "В тесте – Паста", cats: ["В тесте","Паста"] },
       { label: "Основные блюда", cats: ["Основные блюда"] },
+      { label: "Аргентинский гриль", cats: ["Аргентинский гриль"] },
+      { label: "Птица", cats: ["Птица"] },                    // ← ДОБАВЛЕНО
       { label: "Мясное ассорти", cats: ["Мясное ассорти"] },
-      { label: "Пицца", cats: ["Пицца"] },
+      { label: "Пицца", cats: ["Пицца и пиццеты"] },           // ← ИСПРАВЛЕНО
       { label: "Десерты", cats: ["Десерты"] },
       { label: "Гарниры – Хлеб", cats: ["Гарниры","Хлеб"] },
     ];
 
     const money = (n,c)=>{
       if(n==null) return '—';
-      const map={"сом":"KGS","сомы":"KGS","kgs":"KGS"};
+      const map={"сом":"KGS","сомы":"KGS","kgs":"KGS"}; 
       const code = map[(c||'').toLowerCase()] || c || 'KGS';
       return new Intl.NumberFormat('ru-RU').format(n) + ' ' + code;
     };
 
     async function load(){
-      const r = await fetch('./data/menu.json?_=' + Date.now());
+      // menu.json должен лежать рядом с этим HTML
+      const r = await fetch('./menu.json?_=' + Date.now());
       const raw = await r.json();
       STATE.data = { cats: raw.categories || [], items: raw.items || [], brand: raw.brand || null };
       if(STATE.data.brand?.instagram) $('#instaLink').href = STATE.data.brand.instagram;
-      renderGroups();
-      bind();
+      if(STATE.data.brand?.phone) $('#callBtn').href = 'tel:' + STATE.data.brand.phone.replace(/\s+/g,'');
+      renderGroups(); bind();
     }
 
     function bind(){
@@ -207,11 +155,13 @@
       $('#home').style.display='block';
       window.scrollTo({top:0,behavior:'smooth'});
     }
+
     function showMenu(groupLabel){
       $('#home').style.display='none';
       $('#menu').style.display='block';
       $('#where').textContent = groupLabel;
-      const items = STATE.data.items.filter(x => GROUPS.find(g=>g.label===groupLabel).cats.includes(x.category));
+      const g = GROUPS.find(x=>x.label===groupLabel);
+      const items = STATE.data.items.filter(x => g.cats.includes(x.category));
       $('#counter').textContent = `Показано: ${items.length}`;
       renderList(items);
     }
@@ -230,7 +180,9 @@
       const root=$('#list'); root.innerHTML='';
       items.forEach(x=>{
         const el=document.createElement('div'); el.className='item';
-        const t=document.createElement('div'); t.className='thumb'; t.textContent=(x.title||'?')[0]?.toUpperCase()||'?';
+        const t=document.createElement('div'); t.className='thumb';
+        if(x.poster){ t.innerHTML = `<img alt="" src="${x.poster}">`; }
+        else { t.textContent=(x.title||'?')[0]?.toUpperCase()||'?'; }
         const m=document.createElement('div'); m.className='meta';
         const sub=[x.grams?.trim(), x.price!=null?money(x.price,x.currency):null].filter(Boolean).join(' • ');
         m.innerHTML=`<h3>${x.title}</h3><div class="sub">${sub}</div>`;
@@ -246,7 +198,9 @@
       $('#vt').textContent=x.title || '—';
       $('#vp').textContent=x.price!=null?money(x.price,x.currency):'—';
       $('#vd').textContent=x.desc || x.note || '';
+
       const wrap=$('#viewer');
+      // приоритет: 3D-модель → постер → заглушка
       if(x.model?.glb && x.model?.usdz){
         wrap.innerHTML = `
           <model-viewer src="${x.model.glb}" ios-src="${x.model.usdz}" ar
@@ -255,8 +209,11 @@
             style="width:100%;height:420px;border-radius:14px;background:#fff"></model-viewer>`;
         $('#glb').style.display='inline-block'; $('#glb').href=x.model.glb;
         $('#usdz').style.display='inline-block'; $('#usdz').href=x.model.usdz;
+      } else if (x.poster){
+        wrap.innerHTML = `<img src="${x.poster}" alt="" style="max-width:100%;max-height:420px;border-radius:14px;object-fit:contain">`;
+        $('#glb').style.display='none'; $('#usdz').style.display='none';
       } else {
-        wrap.innerHTML = `<span style="color:var(--muted)">3D/AR для этого блюда появится позже</span>`;
+        wrap.innerHTML = `<span style="color:var(--muted)">Материалы для этого блюда появятся позже</span>`;
         $('#glb').style.display='none'; $('#usdz').style.display='none';
       }
     }
@@ -265,4 +222,3 @@
   </script>
 </body>
 </html>
-
