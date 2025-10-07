@@ -1,339 +1,543 @@
-<!doctype html>
-<html lang="ru">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Seven — 3D-меню</title>
-  <meta name="description" content="Интерактивное меню ресторана Seven с 3D/AR моделями блюд." />
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <meta charset="utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Seven — AR Menu (Premium High-Tech)</title>
+  <meta name="description" content="Seven Restaurant — Interactive AR Menu (High-Tech Premium UI)"/>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@700&display=swap" rel="stylesheet"/>
+
+  <!-- Icons (SVGs used inline; link kept for reference) -->
+  <link rel="preconnect" href="https://www.svgrepo.com"/>
+
+  <!-- Base styles (High-Tech Premium: glass + gold accents) -->
   <style>
     :root{
-      --bg:#faf3ec; --ink:#2b201b; --muted:#7e716a; --pill:#977f62; --pill-text:#fbf4ee;
-      --outline:#cdbdaa; --accent:#d4a372; --radius:22px; --shadow:0 10px 25px rgba(0,0,0,.08);
+      --bg-1:#0f0f0f;
+      --bg-2:#1b1b1b;
+      --text:#f5f5f5;
+      --muted:#cfcfcf;
+      --gold:#d4b483;
+      --bordo:#b22222;
+      --glass: rgba(255,255,255,0.06);
+      --glass-strong: rgba(255,255,255,0.12);
+      --shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+      --blur: blur(12px);
+      --radius-lg:20px;
+      --radius-md:16px;
+      --radius-sm:12px;
+      --speed:.25s;
+      --ring: 0 0 0 1px rgba(212,180,131,.35), 0 0 25px rgba(212,180,131,.12);
+      --glow: 0 0 0 0 rgba(212,180,131,0);
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial;}
-    .wrap{max-width:980px;margin:0 auto;padding:28px 18px 60px}
-    header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
-    .top-btn{justify-self:start;padding:9px 14px;border-radius:999px;border:1px solid var(--outline);
-      background:#fff; box-shadow:var(--shadow); color:var(--ink); font-size:13px; cursor:pointer;}
-    .lang{justify-self:end}
-    .logo{width:78px;height:78px;border-radius:50%;margin:28px auto 10px;background:#fff;border:1px solid var(--outline);
-      display:grid;place-items:center;box-shadow:var(--shadow);overflow:hidden;}
-    .logo img{width:100%;height:100%;object-fit:cover}
-    h1{font-size:18px;text-align:center;margin:0 0 18px 0;color:var(--muted);letter-spacing:.3px}
-    .group-list{max-width:640px;margin:0 auto}
-    .pill{background:var(--pill);color:var(--pill-text);border-radius:var(--radius);padding:16px 18px;margin:10px 0;
-      text-align:center;font-weight:700; letter-spacing:.2px; cursor:pointer; box-shadow:var(--shadow);
-      transition:transform .12s ease, filter .12s ease;}
-    .pill:hover{transform:translateY(-1px); filter:brightness(1.02)}
-    .divider{display:flex;align-items:center;gap:12px;margin:22px auto;max-width:640px}
-    .divider .line{flex:1;height:1px;background:var(--outline)}
-    .chev{width:18px;height:18px;border:1px solid var(--outline);border-radius:50%;
-      display:grid;place-items:center;font-size:12px;color:var(--muted);background:#fff}
-    h2{font-size:14px;letter-spacing:.25px;text-align:center;margin:0 0 14px;color:var(--muted)}
-    .social{max-width:640px;margin:0 auto}
-    #menu{display:none}
-    .topbar{display:flex;align-items:center;gap:12px;margin:8px 0 14px}
-    .back{padding:9px 14px;border-radius:999px;border:1px solid var(--outline);background:#fff;cursor:pointer}
-    .where{font-weight:800}
-    .counter{margin-left:auto;color:var(--muted)}
-    .layout{display:grid;gap:18px;grid-template-columns:420px 1fr}
-    @media (max-width:920px){ .layout{grid-template-columns:1fr} }
-    .card{background:#fff;border:1px solid var(--outline);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-    .list{display:grid;gap:10px}
-    .item{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;
-      padding:10px;border:1px solid var(--outline);border-radius:14px;background:#fff;cursor:pointer}
-    .thumb{width:56px;height:56px;border-radius:12px;background:#f4ece5;display:grid;place-items:center;font-weight:900;overflow:hidden}
-    .thumb img{width:100%;height:100%;object-fit:cover}
-    .meta h3{margin:0 0 3px 0;font-size:16px}
-    .meta .sub{color:var(--muted);font-size:13px}
-    .viewer{min-height:360px;border:1px dashed var(--outline);border-radius:14px;display:grid;place-items:center;background:#fff}
-    .titlebar{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
-    .price{font-weight:900}
-    .controls{display:flex;gap:10px;margin-top:10px}
-    .btn{padding:8px 12px;border:1px solid var(--outline);border-radius:10px;background:#fff;cursor:pointer}
-    .btn.primary{background:linear-gradient(180deg,#f5d6b2,#e4b681);border:none;color:#2b1a11;font-weight:800}
-    body:before{content:""; position:fixed; inset:0; pointer-events:none; opacity:.07;
-      background-image:url("./assets/posters/fon.jpg"); background-size:cover; background-position:center; mix-blend-mode:multiply;}
+
+    /* Page background (image overlay + dark radial) */
+    body{
+      margin:0;
+      min-height:100dvh;
+      color:var(--text);
+      font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 800px at 70% -10%, rgba(178,34,34,.25), transparent 60%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2)) ,
+        url("https://images.unsplash.com/photo-1601597111228-338c8f6dc3c6?auto=format&fit=crop&w=1920&q=80") center/cover no-repeat fixed;
+      background-blend-mode: overlay, normal, multiply;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+
+    .wrap{
+      max-width:1200px;
+      padding:32px 20px 80px;
+      margin:0 auto;
+    }
+
+    /* Topbar */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:22px;
+    }
+    .brand-btn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:var(--glass);
+      backdrop-filter:var(--blur);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.12);
+      transition:transform var(--speed), box-shadow var(--speed), border-color var(--speed);
+    }
+    .brand-btn:hover{ transform:translateY(-1px); box-shadow:var(--ring); border-color:rgba(212,180,131,.35); }
+    .call-btn{
+      padding:10px 16px;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(212,180,131,.18), rgba(212,180,131,.10));
+      border:1px solid rgba(212,180,131,.45);
+      box-shadow: 0 0 0 1px rgba(212,180,131,.25), 0 8px 30px rgba(212,180,131,.12);
+      font-weight:600;
+      letter-spacing:.2px;
+      transition:filter var(--speed), transform var(--speed);
+    }
+    .call-btn:hover{ filter:brightness(1.1); transform:translateY(-1px); }
+
+    /* Logo + headline */
+    .hero{
+      display:flex; flex-direction:column; align-items:center; gap:14px;
+      margin:10px 0 26px;
+      text-align:center;
+    }
+    .logo{
+      width:86px; height:86px; border-radius:50%;
+      background:radial-gradient(55% 55% at 50% 45%, #3b0000, #1a0000 60%);
+      display:grid; place-items:center;
+      box-shadow: 0 0 0 2px rgba(212,180,131,.35), 0 0 35px rgba(212,180,131,.18), inset 0 0 22px rgba(212,180,131,.18);
+      position:relative; overflow:hidden;
+    }
+    .logo:before{
+      content:"7";
+      font-family:"Poppins", system-ui, sans-serif;
+      font-size:40px; font-weight:700;
+      color:var(--gold);
+      text-shadow:0 0 16px rgba(212,180,131,.45);
+      transform:translateY(1px);
+    }
+    .hero h1{
+      margin:0;
+      font-family:"Poppins", system-ui, sans-serif;
+      font-size:28px; letter-spacing:.5px;
+      text-shadow:0 1px 0 rgba(0,0,0,.6);
+    }
+
+    /* Category grid (glass buttons) */
+    .cat-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+      margin: 22px auto 34px;
+      max-width:760px;
+    }
+    @media (min-width:720px){
+      .cat-grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    .cat{
+      padding:16px 18px;
+      border-radius:var(--radius-lg);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      backdrop-filter:var(--blur);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.14);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:600;
+      letter-spacing:.2px;
+      transition:transform var(--speed), box-shadow var(--speed), border-color var(--speed);
+      position:relative; overflow:hidden;
+    }
+    .cat:after{
+      content:"";
+      position:absolute; inset:-1px;
+      border-radius:inherit;
+      box-shadow: inset 0 0 0 1px rgba(212,180,131,.28);
+      pointer-events:none;
+    }
+    .cat:hover{
+      transform:translateY(-2px);
+      box-shadow:var(--ring);
+      border-color:rgba(212,180,131,.35);
+    }
+
+    /* List + preview layout */
+    .panel{
+      display:grid; gap:20px;
+      grid-template-columns:1fr;
+    }
+    @media (min-width:980px){
+      .panel{ grid-template-columns: 420px 1fr; }
+    }
+
+    .list{
+      padding:14px;
+      border-radius:var(--radius-lg);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      backdrop-filter:var(--blur);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.14);
+      min-height:420px;
+    }
+
+    .list-title{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; margin:6px 6px 14px;
+    }
+    .list-title h2{
+      margin:0; font-size:18px; font-weight:600; letter-spacing:.2px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; justify-content:center;
+      font-size:12px; padding:3px 8px; border-radius:999px;
+      background:rgba(212,180,131,.14);
+      border:1px solid rgba(212,180,131,.35);
+      color:var(--gold);
+    }
+
+    .item{
+      display:grid; grid-template-columns:56px 1fr;
+      gap:12px; align-items:center;
+      padding:12px 10px;
+      border-radius:var(--radius-md);
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.02);
+      cursor:pointer;
+      transition:background var(--speed), transform var(--speed), border-color var(--speed);
+      margin:8px 4px;
+    }
+    .item:hover{ background:rgba(255,255,255,.06); border-color:rgba(212,180,131,.28); transform:translateY(-1px); }
+    .item.active{ background:rgba(212,180,131,.10); border-color:rgba(212,180,131,.45); }
+
+    .avatar{
+      width:56px; height:56px; border-radius:14px;
+      background:linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.14);
+      display:grid; place-items:center;
+      font-weight:700; font-family:"Poppins";
+      color:var(--gold);
+    }
+
+    .meta-title{ font-weight:600; }
+    .meta-sub{ font-size:12px; color:var(--muted); margin-top:4px; }
+
+    .preview{
+      padding:14px;
+      border-radius:var(--radius-lg);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      backdrop-filter:var(--blur);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.14);
+      min-height:420px;
+      display:flex; flex-direction:column; gap:14px;
+    }
+
+    .canvas{
+      aspect-ratio: 16/9;
+      border-radius:var(--radius-lg);
+      background:
+        radial-gradient(120px 60px at 50% 85%, rgba(212,180,131,.25), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.14);
+      background-size:cover; background-position:center;
+      display:grid; place-items:center;
+    }
+    .canvas img{
+      max-width:100%; max-height:100%;
+      display:block; object-fit:contain;
+      filter: drop-shadow(0 25px 30px rgba(0,0,0,.55));
+    }
+
+    .p-title{
+      font-family:"Poppins"; font-size:22px; margin:6px 4px 0;
+      letter-spacing:.3px;
+    }
+    .price{
+      margin-left:auto; font-weight:700;
+      color:var(--gold);
+      border:1px solid rgba(212,180,131,.45);
+      padding:6px 10px; border-radius:999px; background:rgba(212,180,131,.08);
+    }
+
+    .ar-actions{
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .ar-btn{
+      padding:10px 14px; border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border:1px solid rgba(212,180,131,.35);
+      color:var(--gold); font-weight:600; letter-spacing:.2px;
+      transition:transform var(--speed), filter var(--speed);
+    }
+    .ar-btn:hover{ transform:translateY(-1px); filter:brightness(1.1); }
+
+    .footer{
+      margin-top:36px; display:flex; justify-content:center;
+      opacity:.75; font-size:13px;
+    }
+
+    /* Small helper pills */
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 12px; border-radius:999px;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.14);
+    }
+    .muted{ color:var(--muted); }
   </style>
 </head>
 <body>
-  <div class="wrap" id="app">
-    <header>
-      <button class="top-btn" id="homeBtn">Главная страница</button>
-      <span></span>
-      <button class="top-btn lang" id="langBtn">ENG</button>
-    </header>
+  <div class="wrap">
+    <!-- Top bar -->
+    <div class="topbar">
+      <a class="brand-btn" href="./">
+        <!-- back chevron -->
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6" stroke="white" opacity=".7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Home
+      </a>
 
-    <!-- ГЛАВНАЯ -->
-    <section id="home">
-      <div class="logo"><img src="./assets/posters/seven_logo.png" alt="Seven"></div>
+      <a class="call-btn" href="tel:+996555000777">
+        Call • +996 555 000 777
+      </a>
+    </div>
+
+    <!-- Brand / Hero -->
+    <div class="hero">
+      <div class="logo" aria-label="Seven logo"></div>
       <h1>Menu</h1>
-      <div class="group-list" id="groupList"></div>
-      <div class="divider"><div class="line"></div><div class="chev">⌄</div><div class="line"></div></div>
-      <h2>НАШИ СОЦСЕТИ</h2>
-      <div class="social">
-        <a class="pill" id="instaLink" href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+      <div class="pill muted">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="white" opacity=".6"/>
+          <path d="M8 12h8" stroke="white" opacity=".6"/>
+        </svg>
+        Interactive AR • Premium UI
       </div>
-    </section>
+    </div>
 
-    <!-- КАТЕГОРИИ / БЛЮДА -->
-    <section id="menu">
-      <div class="topbar">
-        <button class="back" id="backBtn">← К категориям</button>
-        <div class="where" id="where"></div>
-        <div class="counter" id="counter"></div>
-        <a class="btn primary" id="callBtn" href="tel:+996555000777">Позвонить</a>
-      </div>
+    <!-- Categories -->
+    <div id="categories" class="cat-grid" role="navigation" aria-label="Categories"></div>
 
-      <div class="layout">
-        <div class="card"><div class="list" id="list"></div></div>
-        <div class="card">
-          <div class="viewer" id="viewer"><span style="color:var(--muted)">Выберите блюдо слева</span></div>
-          <div class="titlebar">
-            <h3 id="vt">—</h3>
-            <div class="price" id="vp">—</div>
-          </div>
-          <div id="vd" style="color:var(--muted)">—</div>
-          <div class="controls">
-            <a id="glb" class="btn" style="display:none" target="_blank">GLB</a>
-            <a id="usdz" class="btn" style="display:none" target="_blank">USDZ</a>
-          </div>
+    <!-- List + Preview -->
+    <div class="panel" aria-live="polite">
+      <section class="list" aria-label="Items">
+        <div class="list-title">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke="white" opacity=".8" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span id="currentCategory">Select a Category</span>
+          </h2>
+          <span class="badge"><span id="shownCount">0</span> shown</span>
         </div>
-      </div>
-    </section>
+        <div id="items"></div>
+      </section>
+
+      <aside class="preview">
+        <div id="canvas" class="canvas" aria-label="Preview">
+          <!-- image will appear here -->
+          <img id="previewImg" alt="Preview" style="display:none;"/>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div id="previewTitle" class="p-title">Pick a dish…</div>
+          <div id="previewPrice" class="price" style="display:none;"></div>
+        </div>
+        <div id="previewMeta" class="muted" style="margin:2px 4px 6px;"></div>
+        <div id="arZone" class="ar-actions"></div>
+      </aside>
+    </div>
+
+    <div class="footer muted">Seven • Bishkek • © 2025</div>
   </div>
 
-  <!-- Встроенный fallback с меню (используется, если fetch menu.json не сработал) -->
-  <script id="menu-embedded" type="application/json">
-  {
-    "brand":{"name":"Seven","city":"Бишкек","phone":"+996555000777","whatsapp":"https://wa.me/996555000777","reserve":"tel:+996555000777"},
-    "categories":["Салаты","Роллы","Закуски","Идеальное дополнение к аперитивам","Супы","В тесте","Паста","Основные блюда","Аргентинский гриль","Птица","Рыба","Мясное ассорти","Пицца и пиццеты","Десерты","Гарниры","Хлеб"],
-    "items":[
-      {"id":"greko","title":"Греко","grams":"300 г","price":690,"currency":"сом","category":"Салаты"},
-      {"id":"green-salad","title":"Зелёный салат","grams":"290 г","price":680,"currency":"сом","category":"Салаты"},
-      {"id":"tabule","title":"Табуле","grams":"300 г","price":590,"currency":"сом","category":"Салаты"},
-      {"id":"caesar","title":"Цезарь","grams":"330 г","price":660,"currency":"сом","category":"Салаты"},
-      {"id":"salmon-salad","title":"Салат с лососем","grams":"300 г","price":890,"currency":"сом","category":"Салаты"},
-      {"id":"shrimp-salad","title":"Салат с креветками","grams":"250 г","price":790,"currency":"сом","category":"Салаты"},
-      {"id":"eggplant-stracciatella","title":"Баклажаны со страчателлой","grams":"280 г","price":840,"currency":"сом","category":"Салаты"},
-      {"id":"veal-salad","title":"Острый салат из телятины","grams":"290 г","price":840,"currency":"сом","category":"Салаты"},
-
-      {"id":"philadelphia","title":"Филадельфия","grams":"230 г","price":790,"currency":"сом","category":"Роллы"},
-      {"id":"shrimp-roll","title":"Ролл с креветками","grams":"280 г","price":740,"currency":"сом","category":"Роллы"},
-      {"id":"baked-salmon-roll","title":"Запечённый ролл с лососем","grams":"280 г","price":820,"currency":"сом","category":"Роллы"},
-      {"id":"baked-eel-roll","title":"Запечённый ролл с угрём","grams":"300 г","price":820,"currency":"сом","category":"Роллы"},
-      {"id":"tempura-shrimp","title":"Темпур ролл с креветками","grams":"310 г","price":680,"currency":"сом","category":"Роллы"},
-      {"id":"tempura-salmon","title":"Темпур ролл с лососем","grams":"310 г","price":720,"currency":"сом","category":"Роллы"},
-      {"id":"salmon-mango-roll","title":"Ролл с лососем и манго","grams":"300 г","price":1100,"currency":"сом","category":"Роллы"},
-      {"id":"open-eel-roll","title":"Открытый ролл с угрём","grams":"220 г","price":900,"currency":"сом","category":"Роллы"},
-      {"id":"baked-assorti","title":"Запечённый ассорти","grams":"280 г","price":1100,"currency":"сом","category":"Роллы"},
-
-      {"id":"hummus","title":"Хумус","grams":"350 г","price":380,"currency":"сом","category":"Закуски"},
-      {"id":"meze","title":"Ассорти мезе","grams":"320 г","price":840,"currency":"сом","category":"Закуски"},
-      {"id":"beetroot","title":"Вяленая свекла с чипсами","grams":"180 г","price":520,"currency":"сом","category":"Закуски"},
-      {"id":"tartar","title":"Тартар","grams":"130 г","price":740,"currency":"сом","category":"Закуски"},
-
-      {"id":"fried-shrimp","title":"Креветки жареные с томатами","grams":"190 г","price":860,"currency":"сом","category":"Идеальное дополнение к аперитивам"},
-      {"id":"veggie-cut","title":"Овощная нарезка","grams":"880 г","price":780,"currency":"сом","category":"Идеальное дополнение к аперитивам"},
-      {"id":"antipasto","title":"Антипасто","grams":"750 г","price":1590,"currency":"сом","category":"Идеальное дополнение к аперитивам"},
-      {"id":"fish-chips","title":"Фиш и чипс","grams":"350/80 г","price":1250,"currency":"сом","category":"Идеальное дополнение к аперитивам"},
-      {"id":"company-assorti","title":"Ассорти на компанию","grams":"1 кг","price":1590,"currency":"сом","category":"Идеальное дополнение к аперитивам"},
-
-      {"id":"tajin-soup","title":"Суп Таджин","grams":"350 г","price":390,"currency":"сом","category":"Супы",
-       "model":{"glb":"./assets/models/soup.glb","usdz":"./assets/models/soup1.usdz"}},
-      {"id":"pumpkin-soup","title":"Тыквенный суп","grams":"350 г","price":420,"currency":"сом","category":"Супы"},
-      {"id":"okroshka","title":"Окрошка с курицей","grams":"450 г","price":390,"currency":"сом","category":"Супы"},
-      {"id":"borsch","title":"Борщ","grams":"450 г","price":540,"currency":"сом","category":"Супы"},
-      {"id":"tom-yam","title":"Том-ям","grams":"350 г","price":820,"currency":"сом","category":"Супы",
-       "poster":"./assets/posters/tom-yam.jpg"},
-
-      {"id":"mini-cheburek","title":"Мини чебуреки с цыплёнком","grams":"220/40 г","price":480,"currency":"сом","category":"В тесте"},
-      {"id":"shawarma","title":"Марокканская шаурма","grams":"480 г","price":680,"currency":"сом","category":"В тесте"},
-      {"id":"burger","title":"Чизбургер на гриле","grams":"340/115 г","price":690,"currency":"сом","category":"В тесте"},
-      {"id":"hachapuri","title":"Хачапури с сыром и яйцом","grams":"270 г","price":540,"currency":"сом","category":"В тесте"},
-
-      {"id":"zucchini-pasta","title":"Паста из цукини с креветками","grams":"320 г","price":730,"currency":"сом","category":"Паста"},
-      {"id":"chicken-pasta","title":"Паста с копчёным цыплёнком","grams":"380 г","price":690,"currency":"сом","category":"Паста"},
-      {"id":"bolognese","title":"Болоньезе","grams":"400 г","price":690,"currency":"сом","category":"Паста"},
-      {"id":"cappelletti","title":"Каппеллетти","grams":"190 г","price":680,"currency":"сом","category":"Паста"},
-      {"id":"salmon-pasta","title":"Паста с лососем и икрой","grams":"310 г","price":760,"currency":"сом","category":"Паста"},
-
-      {"id":"veal-tongue","title":"Говяжий язык на гриле","grams":"380 г","price":880,"currency":"сом","category":"Основные блюда"},
-      {"id":"veal-cheeks","title":"Телячьи щёчки с пюре","grams":"370 г","price":780,"currency":"сом","category":"Основные блюда"},
-      {"id":"horse-cheeks","title":"Щёчки конины с соусом","grams":"320 г","price":790,"currency":"сом","category":"Основные блюда"},
-      {"id":"lamb-meatballs","title":"Митболы из ягнёнка","grams":"300 г","price":760,"currency":"сом","category":"Основные блюда"},
-      {"id":"veal-meatballs","title":"Митболы из телятины","grams":"300 г","price":740,"currency":"сом","category":"Основные блюда"},
-      {"id":"veal-pie","title":"Пирог с мраморной телятиной","grams":"290 г","price":880,"currency":"сом","category":"Основные блюда"},
-
-      {"id":"veal-lyulya","title":"Люля из телятины","grams":"170/80 г","price":640,"currency":"сом","category":"Аргентинский гриль"},
-      {"id":"lamb-lyulya","title":"Люля из ягнёнка","grams":"170/80 г","price":680,"currency":"сом","category":"Аргентинский гриль"},
-      {"id":"chicken-kebab","title":"Шашлык из курицы","grams":"170/80 г","price":640,"currency":"сом","category":"Аргентинский гриль"},
-      {"id":"lamb-kebab","title":"Шашлык из ягнёнка","grams":"170/80 г","price":890,"currency":"сом","category":"Аргентинский гриль"},
-      {"id":"veal-kebab","title":"Шашлык из телятины","grams":"150/80 г","price":890,"currency":"сом","category":"Аргентинский гриль"},
-      {"id":"ribeye","title":"Рибай","grams":"400/90 г","price":2690,"currency":"сом","category":"Аргентинский гриль"},
-      {"id":"cowboy","title":"Ковбой","grams":"450/90 г","price":2350,"currency":"сом","category":"Аргентинский гриль"},
-      {"id":"filet","title":"Филе миньон с пюре","grams":"150/100 г","price":1300,"currency":"сом","category":"Аргентинский гриль"},
-
-      {"id":"chicken-cutlet","title":"Куриная отбивная","grams":"390 г","price":640,"currency":"сом","category":"Птица"},
-      {"id":"chicken-tomyum","title":"Цыплёнок том-ям","grams":"390 г","price":740,"currency":"сом","category":"Птица",
-       "model":{"glb":"./assets/models/tomyumch.glb","usdz":"./assets/models/tomyumch.usdz"}},
-      {"id":"grilled-chicken","title":"Цыплёнок на гриле","grams":"320/200 г","price":860,"currency":"сом","category":"Птица"},
-
-      {"id":"meat-assorti-1","title":"Мясное ассорти сет 1","grams":"1.87 кг","price":6100,"currency":"сом","category":"Мясное ассорти"},
-      {"id":"meat-assorti-2","title":"Мясное ассорти сет 2","grams":"2.3 кг","price":8800,"currency":"сом","category":"Мясное ассорти"},
-
-      {"id":"pepperoni","title":"Пепперони","grams":"30 см/20 см","price":640,"currency":"сом","category":"Пицца и пиццеты"},
-      {"id":"chicken-pizza","title":"Пицца с куриной грудкой","grams":"30 см/20 см","price":780,"currency":"сом","category":"Пицца и пиццеты"},
-      {"id":"cheese-pizza","title":"Четыре сыра","grams":"30 см/20 см","price":780,"currency":"сом","category":"Пицца и пиццеты"},
-      {"id":"pizza-chili","title":"Пицца чили","grams":"30 см/20 см","price":720,"currency":"сом","category":"Пицца и пиццеты"},
-      {"id":"margarita","title":"Маргарита","grams":"30 см/20 см","price":620,"currency":"сом","category":"Пицца и пиццеты"},
-      {"id":"pizza-caesar","title":"Пицца цезарь","grams":"30 см/20 см","price":720,"currency":"сом","category":"Пицца и пиццеты"},
-      {"id":"pear-pizza","title":"Пицца с грушей и сыром","grams":"30 см/20 см","price":790,"currency":"сом","category":"Пицца и пиццеты"},
-      {"id":"assorti-pizza","title":"Пицца ассорти","grams":"30 см/20 см","price":740,"currency":"сом","category":"Пицца и пиццеты"},
-
-      {"id":"fondant","title":"Шоколадный фондан","grams":"130 г","price":580,"currency":"сом","category":"Десерты"},
-      {"id":"tres-leches","title":"Трес лечес","grams":"160 г","price":360,"currency":"сом","category":"Десерты"},
-      {"id":"carrot-cake","title":"Морковный торт","grams":"150 г","price":340,"currency":"сом","category":"Десерты"},
-      {"id":"honey-cake","title":"Медовик","grams":"140 г","price":340,"currency":"сом","category":"Десерты"},
-      {"id":"fruit-salad","title":"Фруктовая нарезка","grams":"2400 г","price":3500,"currency":"сом","category":"Десерты"},
-      {"id":"tart","title":"Тарт с голубикой","grams":"130 г","price":480,"currency":"сом","category":"Десерты"},
-      {"id":"crepe-cake","title":"Торт блинный","grams":"210 г","price":480,"currency":"сом","category":"Десерты"},
-      {"id":"banana-republic","title":"Banana Republic","grams":"230 г","price":490,"currency":"сом","category":"Десерты"},
-
-      {"id":"mashed-potato","title":"Картофельное пюре","grams":"150 г","price":190,"currency":"сом","category":"Гарниры"},
-      {"id":"fries","title":"Картофель фри","grams":"130/40 г","price":250,"currency":"сом","category":"Гарниры"},
-      {"id":"fries-parmesan","title":"Картофель фри с пармезаном","grams":"140/40 г","price":290,"currency":"сом","category":"Гарниры"},
-      {"id":"basmati","title":"Рис басмати","grams":"100 г","price":190,"currency":"сом","category":"Гарниры"},
-      {"id":"veggies","title":"Овощи на гриле","grams":"300 г","price":340,"currency":"сом","category":"Гарниры"},
-
-      {"id":"ciabatta","title":"Чиабатта","grams":"80/20 г","price":100,"currency":"сом","category":"Хлеб"},
-      {"id":"rye-ciabatta","title":"Чиабатта ржаная","grams":"80/20 г","price":100,"currency":"сом","category":"Хлеб"},
-      {"id":"grissini","title":"Гриссини","grams":"3 шт","price":100,"currency":"сом","category":"Хлеб"},
-      {"id":"bread-basket","title":"Хлебная корзина","grams":"160/20 г","price":290,"currency":"сом","category":"Хлеб"},
-      {"id":"arab-bread","title":"Арабские лепешки","grams":"80 г","price":100,"currency":"сом","category":"Хлеб"}
-    ]
-  }
-  </script>
-
+  <!-- Data loader & UI logic
+       NOTE: We keep structure & logic simple and compatible with your previous JSON (menu.json).
+       The page expects a file `menu.json` in the same folder with the schema you shared earlier. -->
   <script>
-    const $ = s => document.querySelector(s);
-    const STATE = { data:null, cat:null, active:null };
+    // ---------- Helpers ----------
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-    const GROUPS = [
-      { label: "Салаты – Роллы", cats: ["Салаты","Роллы"] },
-      { label: "Закуски", cats: ["Закуски"] },
-      { label: "Супы", cats: ["Супы"] },
-      { label: "В тесте – Паста", cats: ["В тесте","Паста"] },
-      { label: "Основные блюда", cats: ["Основные блюда"] },
-      { label: "Аргентинский гриль", cats: ["Аргентинский гриль"] },
-      { label: "Птица", cats: ["Птица"] },                 // добавлено
-      { label: "Мясное ассорти", cats: ["Мясное ассорти"] },
-      { label: "Пицца", cats: ["Пицца и пиццеты"] },       // исправлено название
-      { label: "Десерты", cats: ["Десерты"] },
-      { label: "Гарниры – Хлеб", cats: ["Гарниры","Хлеб"] },
-    ];
-
-    const money = (n,c)=>{
-      if(n==null) return '—';
-      const map={"сом":"KGS","сомы":"KGS","kgs":"KGS"}; 
-      const code = map[(c||'').toLowerCase()] || c || 'KGS';
-      return new Intl.NumberFormat('ru-RU').format(n) + ' ' + code;
+    // A tiny map of known images (you can expand later). If not found — a classy fallback is used.
+    const IMAGE_FALLBACK = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80";
+    const IMAGE_MAP = {
+      // Soups
+      "pumpkin-soup": "https://static.tildacdn.one/tild3763-3435-4366-a238-376131363632/DSC06695.jpg",
+      "okroshka": "https://static.tildacdn.one/tild6134-3931-4662-b866-666638303239/DSC06809.jpg",
+      "borsch": "https://static.tildacdn.one/tild3465-3365-4135-b738-666638613837/DSC00428.jpg",
+      "tom-yam": "https://static.tildacdn.one/tild6630-3936-4238-a531-303333633265/DSC00458.jpg",
+      "tajin-soup": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1600&q=80",
+      // Poultry (link Tom-Yam Chicken model correctly)
+      "chicken-tomyum": "https://images.unsplash.com/photo-1517244683847-7456b63c5969?auto=format&fit=crop&w=1600&q=80",
+      "grilled-chicken": "https://images.unsplash.com/photo-1604908554007-51a38d728ef0?auto=format&fit=crop&w=1600&q=80",
+      "chicken-cutlet": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80"
     };
 
-    async function load(){
-      let data;
+    // Texts (English UI)
+    const TXT = {
+      home: "Home",
+      categories: "Categories",
+      selectCategory: "Select a Category",
+      shown: "shown",
+      call: "Call",
+      glb: "GLB",
+      usdz: "USDZ",
+      grams: "g",
+      kg: "kg"
+    };
+
+    // ---------- Rendering ----------
+    const els = {
+      categories: $("#categories"),
+      items: $("#items"),
+      currentCategory: $("#currentCategory"),
+      shownCount: $("#shownCount"),
+      previewImg: $("#previewImg"),
+      canvas: $("#canvas"),
+      previewTitle: $("#previewTitle"),
+      previewPrice: $("#previewPrice"),
+      previewMeta: $("#previewMeta"),
+      arZone: $("#arZone")
+    };
+
+    let MENU = null;
+    let state = { cat: null, items: [], activeId: null };
+
+    async function loadMenu(){
       try{
-        // попробуем загрузить внешний menu.json (если страница открыта с сервера)
-        const r = await fetch('./menu.json', {cache:'no-store'});
-        if(r.ok){ data = await r.json(); }
-      }catch(e){ /* тихо падаем в встроенный JSON */ }
-      if(!data){
-        data = JSON.parse(document.getElementById('menu-embedded').textContent);
-      }
-      STATE.data = { cats: data.categories||[], items: data.items||[], brand: data.brand||null };
-      if(STATE.data.brand?.whatsapp) $('#instaLink').href = STATE.data.brand.whatsapp; // можно поставить insta, если дадите ссылку
-      if(STATE.data.brand?.phone) $('#callBtn').href = 'tel:' + STATE.data.brand.phone.replace(/\s+/g,'');
-      renderGroups(); bind();
-    }
-
-    function bind(){
-      $('#homeBtn').onclick = showHome;
-      $('#backBtn').onclick = showHome;
-      $('#langBtn').onclick = ()=>alert("Переключение языка можно подключить позже 🙂");
-    }
-
-    function showHome(){
-      $('#menu').style.display='none';
-      $('#home').style.display='block';
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-
-    function showMenu(groupLabel){
-      $('#home').style.display='none';
-      $('#menu').style.display='block';
-      $('#where').textContent = groupLabel;
-      const g = GROUPS.find(x=>x.label===groupLabel);
-      const items = STATE.data.items.filter(x => g.cats.includes(x.category));
-      $('#counter').textContent = `Показано: ${items.length}`;
-      renderList(items);
-    }
-
-    function renderGroups(){
-      const root = $('#groupList'); root.innerHTML='';
-      GROUPS.forEach(g=>{
-        const btn=document.createElement('div');
-        btn.className='pill'; btn.textContent=g.label;
-        btn.onclick=()=>showMenu(g.label);
-        root.appendChild(btn);
-      });
-    }
-
-    function renderList(items){
-      const root=$('#list'); root.innerHTML='';
-      items.forEach(x=>{
-        const el=document.createElement('div'); el.className='item';
-        const t=document.createElement('div'); t.className='thumb';
-        if(x.poster){ t.innerHTML = `<img alt="" src="${x.poster}">`; }
-        else { t.textContent=(x.title||'?')[0]?.toUpperCase()||'?'; }
-        const m=document.createElement('div'); m.className='meta';
-        const sub=[x.grams?.trim(), x.price!=null?money(x.price,x.currency):null].filter(Boolean).join(' • ');
-        m.innerHTML=`<h3>${x.title}</h3><div class="sub">${sub}</div>`;
-        el.appendChild(t); el.appendChild(m);
-        el.onclick=()=>openItem(x);
-        root.appendChild(el);
-      });
-      if(items[0]) openItem(items[0]);
-    }
-
-    function openItem(x){
-      STATE.active=x;
-      $('#vt').textContent=x.title || '—';
-      $('#vp').textContent=x.price!=null?money(x.price,x.currency):'—';
-      $('#vd').textContent=x.desc || x.note || '';
-
-      const wrap=$('#viewer');
-      // приоритет: 3D-модель → постер → заглушка
-      if(x.model?.glb && x.model?.usdz){
-        wrap.innerHTML = `
-          <model-viewer src="${x.model.glb}" ios-src="${x.model.usdz}" ar
-            ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate
-            shadow-intensity="1" exposure="1.05"
-            style="width:100%;height:420px;border-radius:14px;background:#fff"></model-viewer>`;
-        $('#glb').style.display='inline-block'; $('#glb').href=x.model.glb;
-        $('#usdz').style.display='inline-block'; $('#usdz').href=x.model.usdz;
-      } else if (x.poster){
-        wrap.innerHTML = `<img src="${x.poster}" alt="" style="max-width:100%;max-height:420px;border-radius:14px;object-fit:contain">`;
-        $('#glb').style.display='none'; $('#usdz').style.display='none';
-      } else {
-        wrap.innerHTML = `<span style="color:var(--muted)">Материалы для этого блюда появятся позже</span>`;
-        $('#glb').style.display='none'; $('#usdz').style.display='none';
+        const res = await fetch("menu.json", {cache:"no-store"});
+        MENU = await res.json();
+        buildCategories(MENU.categories);
+        // default open the first category
+        if(MENU.categories && MENU.categories.length){
+          selectCategory(MENU.categories[0]);
+        }
+      }catch(e){
+        console.error("menu.json load failed", e);
+        els.categories.innerHTML = `<div class="muted">menu.json not found. Place it near index.html</div>`;
       }
     }
 
-    load();
+    function buildCategories(cats){
+      els.categories.innerHTML = "";
+      cats.forEach(cat=>{
+        const a = document.createElement("button");
+        a.className = "cat";
+        a.type="button";
+        a.textContent = cat;
+        a.addEventListener("click", ()=>selectCategory(cat));
+        els.categories.appendChild(a);
+      });
+    }
+
+    function selectCategory(cat){
+      state.cat = cat;
+      const items = MENU.items.filter(it => it.category === cat);
+      state.items = items;
+      els.items.innerHTML = "";
+      els.currentCategory.textContent = cat;
+      els.shownCount.textContent = items.length;
+
+      items.forEach((it, idx)=>{
+        const row = document.createElement("div");
+        row.className = "item";
+        row.dataset.id = it.id;
+
+        const avatar = document.createElement("div");
+        avatar.className = "avatar";
+        avatar.textContent = (it.title || "?").slice(0,1).toUpperCase();
+
+        const meta = document.createElement("div");
+        const title = document.createElement("div");
+        title.className = "meta-title";
+        title.textContent = it.title;
+
+        const sub = document.createElement("div");
+        sub.className = "meta-sub";
+        sub.textContent = [it.grams || "", (it.price!=null? `${it.price} KGS` : "")].filter(Boolean).join(" • ");
+
+        meta.appendChild(title); meta.appendChild(sub);
+        row.appendChild(avatar); row.appendChild(meta);
+
+        row.addEventListener("click", ()=>{
+          $$(".item", els.items).forEach(el => el.classList.remove("active"));
+          row.classList.add("active");
+          state.activeId = it.id;
+          showPreview(it);
+        });
+
+        els.items.appendChild(row);
+
+        // Auto-select first
+        if(idx===0){
+          row.classList.add("active");
+          state.activeId = it.id;
+          showPreview(it);
+        }
+      });
+
+      if(items.length===0){
+        els.items.innerHTML = `<div class="muted" style="padding:8px 6px;">No dishes in this category yet.</div>`;
+        resetPreview();
+      }
+    }
+
+    function resetPreview(){
+      els.previewImg.style.display="none";
+      els.previewTitle.textContent="Pick a dish…";
+      els.previewPrice.style.display="none";
+      els.previewMeta.textContent="";
+      els.arZone.innerHTML="";
+      els.canvas.style.backgroundImage = `url(${IMAGE_FALLBACK})`;
+    }
+
+    function showPreview(it){
+      const img = IMAGE_MAP[it.id] || IMAGE_FALLBACK;
+      els.canvas.style.backgroundImage = "none";
+      els.previewImg.src = img;
+      els.previewImg.alt = it.title || "Dish image";
+      els.previewImg.style.display = "block";
+
+      els.previewTitle.textContent = it.title || "";
+      if(typeof it.price === "number"){
+        els.previewPrice.style.display="inline-flex";
+        els.previewPrice.textContent = `${it.price} KGS`;
+      }else{
+        els.previewPrice.style.display="none";
+      }
+
+      els.previewMeta.textContent = it.grams ? `${it.grams}` : "";
+
+      // AR / model buttons
+      els.arZone.innerHTML = "";
+      if(it.model && (it.model.glb || it.model.usdz)){
+        if(it.model.glb){
+          const b = document.createElement("a");
+          b.href = it.model.glb;
+          b.className = "ar-btn";
+          b.target = "_blank";
+          b.rel = "noopener";
+          b.textContent = "GLB";
+          els.arZone.appendChild(b);
+        }
+        if(it.model.usdz){
+          const b2 = document.createElement("a");
+          b2.href = it.model.usdz;
+          b2.className = "ar-btn";
+          b2.target = "_blank";
+          b2.rel = "noopener";
+          b2.textContent = "USDZ";
+          els.arZone.appendChild(b2);
+        }
+      }
+    }
+
+    // Ensure correct AR model binding for Chicken Tom-Yam (id: chicken-tomyum)
+    // by mirroring the soup Tom-Yam model if not set in JSON.
+    function patchModels(){
+      try{
+        const tomYamSoup = MENU.items.find(x=>x.id==="tom-yam" && x.model);
+        const chickenTY = MENU.items.find(x=>x.id==="chicken-tomyum");
+        if(chickenTY && (!chickenTY.model || (!chickenTY.model.glb && !chickenTY.model.usdz)) && tomYamSoup){
+          chickenTY.model = { ...tomYamSoup.model };
+        }
+      }catch(e){ /* safe no-op */ }
+    }
+
+    // Boot
+    loadMenu().then(()=>{ patchModels(); });
   </script>
 </body>
 </html>
